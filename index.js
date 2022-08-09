@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 app.get('/api/', (req, res) => {
     res.json({
-        unix: new Date(),
+        unix: new Date().getTime(),
         utc: new Date().toUTCString()
     });
 });
