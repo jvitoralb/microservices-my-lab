@@ -33,7 +33,7 @@ app.use('/api/:date?', (req, res, next) => {
             return res.json({error: 'Invalid Date'});
         }
         return res.json({
-            unix: req.params.date,
+            unix: Number(req.params.date),
             utc: newDateTime.toUTCString()
         });
     }
