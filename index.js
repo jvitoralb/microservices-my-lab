@@ -22,24 +22,22 @@ app.get('/api/', (req, res) => {
         utc: new Date().toUTCString()
     });
 });
-      
+
 app.use('/api/:date?', (req, res, next) => {
     let isValidReq = new Date(req.params.date);
     let newDateTime = new Date();
-
-    if (isValidReq.getDate()) {
-        return next('route');
-    }
     newDateTime.setTime(req.params.date);
 
-    if (newDateTime.toUTCString() === 'Invalid Date') {
-        return res.json({error: 'Invalid Date'})
+    if (!isValidReq.getDate()) {
+        if (newDateTime.toUTCString() === 'Invalid Date') {
+            return res.json({error: 'Invalid Date'});
+        }
+        return res.json({
+            unix: req.params.date,
+            utc: newDateTime.toUTCString()
+        });
     }
-    // if date ~ 1451001600000
-    res.json({ 
-        unix: req.params.date,
-        utc: newDateTime.toUTCString()
-    });
+    next();
 });
 
 app.get('/api/:date?', (req, res) => {
