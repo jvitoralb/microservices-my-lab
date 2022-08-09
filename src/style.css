@@ -5,6 +5,10 @@
     font-family: 'Inter', sans-serif;
 }
 
+a {
+    color: blue;
+}
+
 header {
     text-align: center;
     padding: 12px;
@@ -12,12 +16,21 @@ header {
 }
 
 main {
-    margin: 8px 25px;
+    margin: 14px 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: aliceblue;
+}
+
+main > * {
+    margin: 6px 0;
+}
+
+code {
+    padding: 3px;
+    background-color: #ffffff;
 }
 
 .credit {
