@@ -25,11 +25,11 @@ app.get('/api/', (req, res) => {
       
 app.use('/api/:date?', (req, res, next) => {
     let isValidReq = new Date(req.params.date);
+    let newDateTime = new Date();
 
     if (isValidReq.getDate()) {
         return next('route');
     }
-    let newDateTime = new Date();
     newDateTime.setTime(req.params.date);
 
     if (newDateTime.toUTCString() === 'Invalid Date') {
