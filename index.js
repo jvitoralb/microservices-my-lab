@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/', (req, res) => {
-    let now = new Date();
+    const now = new Date();
     res.json({
         unix: now.getTime(),
         utc: now.toUTCString()
@@ -25,9 +25,9 @@ app.get('/api/', (req, res) => {
 });
 
 app.use('/api/:date?', (req, res, next) => {
-    let isValidReq = new Date(req.params.date);
-    let unixReq = Number(req.params.date);
-    let newDateTime = new Date();
+    const isValidReq = new Date(req.params.date);
+    const unixReq = Number(req.params.date);
+    const newDateTime = new Date();
 
     if (!isValidReq.getDate()) {
         newDateTime.setTime(unixReq);
@@ -40,9 +40,8 @@ app.use('/api/:date?', (req, res, next) => {
 });
 
 app.get('/api/:date?', (req, res) => {
-    let dateReq = new Date(req.params.date);
-    let unixTimestamp = dateReq.getTime();
-
+    const dateReq = new Date(req.params.date);
+    const unixTimestamp = dateReq.getTime();
     res.json({
         unix: unixTimestamp,
         utc: dateReq.toUTCString()
