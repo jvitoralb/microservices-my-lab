@@ -50,4 +50,6 @@ app.get('/api/:date?', (req, res) => {
     });
 });
 
-app.listen(PORT, () => console.log(`Server has started on port ${PORT}`));
+const listener = app.listen(process.env.PORT || PORT, () => {
+    console.log(`Server has started on port ${listener.address().port}`);
+});
