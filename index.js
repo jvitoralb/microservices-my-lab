@@ -17,25 +17,24 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/', (req, res) => {
+    let now = new Date();
     res.json({
-        unix: new Date().getTime(),
-        utc: new Date().toUTCString()
+        unix: now.getTime(),
+        utc: now.toUTCString()
     });
 });
 
 app.use('/api/:date?', (req, res, next) => {
     let isValidReq = new Date(req.params.date);
+    let unixReq = Number(req.params.date);
     let newDateTime = new Date();
-    newDateTime.setTime(req.params.date);
 
     if (!isValidReq.getDate()) {
-        if (newDateTime.toUTCString() === 'Invalid Date') {
-            return res.json({error: 'Invalid Date'});
-        }
-        return res.json({
-            unix: Number(req.params.date),
-            utc: newDateTime.toUTCString()
-        });
+        newDateTime.setTime(unixReq);
+
+        return newDateTime.toUTCString() !== 'Invalid Date' ? 
+        res.json({unix: unixReq, utc: newDateTime.toUTCString()}) :
+        res.json({error: 'Invalid Date'});
     }
     next();
 });
