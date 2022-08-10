@@ -15,7 +15,15 @@ app.get('/', (req, res) => {
     res.sendFile(`${__dirname}/public/index.html`);
 });
 
-app.get('/api/', (req, res) => {
+/**
+ *  Timestamp API project
+**/
+
+app.get('/timestamp', (req, res) => {
+    res.sendFile(`${__dirname}/public/timestamp.html`);
+});
+
+app.get('/timestamp/api/', (req, res) => {
     const now = new Date();
     res.json({
         unix: now.getTime(),
@@ -23,7 +31,7 @@ app.get('/api/', (req, res) => {
     });
 });
 
-app.use('/api/:date?', (req, res, next) => {
+app.use('/timestamp/api/:date?', (req, res, next) => {
     const isValidReq = new Date(req.params.date);
     const unixReq = Number(req.params.date);
     const newDateTime = new Date();
@@ -38,7 +46,7 @@ app.use('/api/:date?', (req, res, next) => {
     next();
 });
 
-app.get('/api/:date?', (req, res) => {
+app.get('/timestamp/api/:date?', (req, res) => {
     const dateReq = new Date(req.params.date);
     const unixTimestamp = dateReq.getTime();
     res.json({
@@ -46,6 +54,10 @@ app.get('/api/:date?', (req, res) => {
         utc: dateReq.toUTCString()
     });
 });
+
+/**
+ *  Request header parser API project
+**/
 
 app.get('/req-header-parser', (req, res) => {
     res.sendFile(`${__dirname}/public/reqheader.html`);
