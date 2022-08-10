@@ -1,15 +1,16 @@
 {
-  "name": "timestamp-microservice",
+  "name": "microservices-apis",
   "version": "1.0.0",
-  "description": "fcc project to practice node and express",
+  "description": "Project to practice back end development and APIs",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "keywords": [
-    "microservices",
     "node",
     "express",
+    "heroku",
+    "microservices",
     "freeCodeCamp"
   ],
   "author": "",
