@@ -1,13 +1,16 @@
+import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import { fileURLToPath } from 'url';
+import dns from 'node:dns';
 import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+dotenv.config();
 app.use(cors());
 app.use(express.static(__dirname));
 
@@ -68,6 +71,37 @@ app.get('/req-header-parser/api/whoami', (req, res) => {
         ipaddress: req.ip,
         language: req.acceptsLanguages().join(','),
         software: req.headers['user-agent']
+    });
+});
+
+/**
+ *  URL Shortener 
+**/
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
+app.use((req, res, next) => {
+    const postedURL = req.body.propname;
+    return dns.lookup(postedURL, (err, address, family) => {
+        if (err) {
+            console.log(err);
+            return res.json({error: 'invalid url'});
+        }
+        console.log(address, family)
+        return next();
+    });
+});
+
+app.get('/url-shortener', (req, res) => {
+   res.sendFile(`${__dirname}/public/urlshortener.html`);
+});
+
+app.post('/url-shortener', (req, res) => {
+    const postedURL = req.body.propname;
+
+    res.json({
+        original_url: postedURL,
+        short_url: ''
     });
 });
 
