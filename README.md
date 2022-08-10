@@ -1,4 +1,4 @@
-## Timestamp Microservice Project
+## Microservices Projects
 
 A simple and straightforward project to practice what I've been learning about Back end development and APIs.  
 To build this project I used the Express - Nodejs web framework, and Heroku.

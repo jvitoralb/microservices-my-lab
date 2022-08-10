@@ -10,18 +10,21 @@
 </head>
 <body id="body">
     <header id="header">
-        <h2>Timestamp Microservice</h2>
+        <h2>Request Header Parser Microservice</h2>
     </header>
     <main id="main">
-        <a href="/req-header-parser">
-            <h4>API Project: Request Header Parser</h4>
+        <a href="/">
+            <h4>API Project: Timestamp</h4>
         </a>
         <h3>Usage</h3>
-        <a href="/api/1948-01-01">thisapp.com/api/1948-01-01</a>
-        <a href="/api/441763200000">thisapp.com/api/441763200000</a>
+        <a href="/req-header-parser/api/whoami">thisapp.com/req-header-parser/api/whoami</a>
         <h3>Expected Output</h3>
-        <code>{"unix":-694310400000,"utc":"Thu, 01 Jan 1948 00:00:00 GMT"}</code>
-        <code>{"unix":441763200000,"utc":"Sun, 01 Jan 1984 00:00:00 GMT"}</code>
+        <code class="header-parser-code">
+            {
+            "ipaddress":"177.14.49.159", "language":"en-US,en,pt-BR,pt",<br>
+            "software":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+            }
+        </code>
         <p class="credit">by jvitoralb</p>
     </main>
 </body>

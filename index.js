@@ -48,6 +48,18 @@ app.get('/api/:date?', (req, res) => {
     });
 });
 
+app.get('/req-header-parser', (req, res) => {
+    res.sendFile(`${__dirname}/public/reqheader.html`);
+});
+
+app.get('/req-header-parser/api/whoami', (req, res) => {
+    res.json({
+        ipaddress: req.ip,
+        language: req.acceptsLanguages().join(','),
+        software: req.headers['user-agent']
+    });
+});
+
 const listener = app.listen(process.env.PORT || PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);
 });
