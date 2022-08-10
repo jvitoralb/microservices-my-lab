@@ -5,7 +5,7 @@ import { dirname } from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
@@ -59,6 +59,6 @@ app.get('/req-header-parser/api/whoami', (req, res) => {
     });
 });
 
-const listener = app.listen(process.env.PORT || PORT, () => {
+const listener = app.listen(PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);
 });
