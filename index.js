@@ -90,9 +90,8 @@ app.use('/url-shortener/api/shorturl', (req, res, next) => {
     if (urlToCheck.includes('https://')) {
         urlToCheck = urlToCheck.replace('https://', '');
     }
-    dns.lookup(urlToCheck, (err, address, family) => {
+    dns.lookup(urlToCheck, (err) => {
         if (err) {
-            console.log(err);
             return res.json({error: 'invalid url'});
         }
         next();
