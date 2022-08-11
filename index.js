@@ -102,7 +102,6 @@ app.use('/url-shortener/api/shorturl', (req, res, next) => {
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
     const getShortedurl = () => {
         findMainURL(req.body.url, (err, short) => {
-            console.log('to find', short);
             if (err) return next(err);
             res.json({
                 original_url: short[0].mainUrl,
