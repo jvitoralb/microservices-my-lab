@@ -86,12 +86,12 @@ app.get('/url-shortener', (req, res) => {
 
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
     let urlToCheck = req.body.url;
-    console.log(req.body.url, req.body, req)
+
     if (urlToCheck.includes('https://')) {
         urlToCheck = urlToCheck.replace('https://', '');
     }
     dns.lookup(urlToCheck, (err) => {
-        if (err) {
+        if (err || !urlToCheck) {
             return res.json({error: 'invalid url'});
         }
         next();
