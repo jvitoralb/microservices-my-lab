@@ -3,7 +3,7 @@ import cors from 'cors';
 import dns from 'node:dns';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import Shortener, { createSave, findMainURL } from './shortenerApp.js';
+import Shortener, { createSave, findMainURL, findShortURL } from './shortenerApp.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -84,21 +84,20 @@ app.get('/url-shortener', (req, res) => {
    res.sendFile(`${__dirname}/public/urlshortener.html`);
 });
 
-app.use('/url-shortener/api/shorturl', (req, res, next) => {
+app.post('/url-shortener/api/shorturl', (req, res, next) => {
     let urlToCheck = req.body.url;
 
     if (urlToCheck.includes('https://')) {
         urlToCheck = urlToCheck.replace('https://', '');
     }
     dns.lookup(urlToCheck, (err) => {
+        console.log('checking dns')
         if (err || !urlToCheck) {
             return res.json({error: 'invalid url'});
         }
         next();
     });
-});
-
-app.post('/url-shortener/api/shorturl', (req, res, next) => {
+}, (req, res, next) => {
     const getShortedurl = () => {
         findMainURL(req.body.url, (err, short) => {
             if (err) return next(err);
@@ -122,9 +121,15 @@ app.post('/url-shortener/api/shorturl', (req, res, next) => {
     });
 });
 
-app.get('/url-shortener/api/shorturl/:shortID', (req, res) => {
-    res.send(req.params);
-})
+app.get('/url-shortener/api/shorturl/:shortID', (req, res, next) => {
+    if (!Number(req.params)) {
+        return res.json({error: 'must be a number'});
+    }
+    findShortURL(req.params.shortID, (err, response) => {
+        if (err) return next(err);
+        res.redirect(response[0].mainUrl);
+    });
+});
 
 const listener = app.listen(PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);

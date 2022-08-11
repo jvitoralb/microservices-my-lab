@@ -42,9 +42,9 @@ export const findMainURL = (url, done) => {
     });
 }
 
-export const findShortURL = (shortURL) => {
+export const findShortURL = (shortURL, done) => {
     Shortener.find({shortUrlCode: shortURL}, (err, result) => {
-        return err ? console.log(err) : console.log(result);
+        return err ? done(err) : done(null, result);
     });
 }
 
