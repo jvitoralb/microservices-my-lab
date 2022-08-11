@@ -80,7 +80,11 @@ app.get('/req-header-parser/api/whoami', (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use((req, res, next) => {
+app.get('/url-shortener', (req, res) => {
+   res.sendFile(`${__dirname}/public/urlshortener.html`);
+});
+
+app.use('/url-shortener/api/shorturl', (req, res, next) => {
     let urlToCheck = req.body.url;
 
     if (urlToCheck.includes('https://')) {
@@ -93,10 +97,6 @@ app.use((req, res, next) => {
         }
         next();
     });
-});
-
-app.get('/url-shortener', (req, res) => {
-   res.sendFile(`${__dirname}/public/urlshortener.html`);
 });
 
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
