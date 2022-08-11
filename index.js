@@ -3,7 +3,7 @@ import cors from 'cors';
 import dns from 'node:dns';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import Shortener, { createSave } from './shortenerApp.js';
+import Shortener, { createSave, findMainURL } from './shortenerApp.js';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -100,11 +100,20 @@ app.get('/url-shortener', (req, res) => {
 });
 
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
+    const getShortedurl = () => {
+        findMainURL(req.body.url, (err, short) => {
+            console.log('to find', short);
+            if (err) return next(err);
+            res.json({
+                original_url: short[0].mainUrl,
+                short_url: short[0].shortUrlCode
+            });
+        });
+    }
     createSave(req.body.url, (err, savedData) => {
         if (err) {
-            return err.code === 11000 ? next('E11000 duplicate key error') : next(err);
+            return err.code === 11000 ? getShortedurl() : next(err);
         }
-        console.log('created');
         Shortener.findById(savedData._id, (err, short) => {
             if (err) return next(err);
             res.json({
