@@ -1,16 +1,16 @@
-import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import dns from 'node:dns';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+import Shortener, { createSave } from './shortenerApp.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-dotenv.config();
 app.use(cors());
 app.use(express.static(__dirname));
 
@@ -81,14 +81,17 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.use((req, res, next) => {
-    const postedURL = req.body.propname;
-    return dns.lookup(postedURL, (err, address, family) => {
+    let urlToCheck = req.body.url;
+
+    if (urlToCheck.includes('https://')) {
+        urlToCheck = urlToCheck.replace('https://', '');
+    }
+    dns.lookup(urlToCheck, (err, address, family) => {
         if (err) {
             console.log(err);
             return res.json({error: 'invalid url'});
         }
-        console.log(address, family)
-        return next();
+        next();
     });
 });
 
@@ -96,14 +99,25 @@ app.get('/url-shortener', (req, res) => {
    res.sendFile(`${__dirname}/public/urlshortener.html`);
 });
 
-app.post('/url-shortener', (req, res) => {
-    const postedURL = req.body.propname;
-
-    res.json({
-        original_url: postedURL,
-        short_url: ''
+app.post('/url-shortener/api/shorturl', (req, res, next) => {
+    createSave(req.body.url, (err, savedData) => {
+        if (err) {
+            return err.code === 11000 ? next('E11000 duplicate key error') : next(err);
+        }
+        console.log('created');
+        Shortener.findById(savedData._id, (err, short) => {
+            if (err) return next(err);
+            res.json({
+                original_url: short.mainUrl,
+                short_url: short.shortUrlCode
+            });
+        });
     });
 });
+
+app.get('/url-shortener/api/shorturl/:shortID', (req, res) => {
+    res.send(req.params);
+})
 
 const listener = app.listen(PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);
