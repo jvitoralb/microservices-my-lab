@@ -84,6 +84,20 @@ app.get('/url-shortener', (req, res) => {
    res.sendFile(`${__dirname}/public/urlshortener.html`);
 });
 
+/**
+ * fix get /api/shorturl, maybe add a malware func
+**/
+
+app.use('/url-shortener/api/shorturl', (req, res, next) => {
+    console.log('middleware', req.method, req.body, req.path)
+    if (!req.body.url && req.method === 'POST') {
+        return res.json({error: 'invalid url'});
+    } else if (!req.body.url && req.path === '/') {
+        return  res.status(404).send('Not found');
+    }
+    next();
+});
+
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
     let urlToCheck = req.body.url;
 
@@ -91,8 +105,7 @@ app.post('/url-shortener/api/shorturl', (req, res, next) => {
         urlToCheck = urlToCheck.replace('https://', '');
     }
     dns.lookup(urlToCheck, (err) => {
-        console.log('checking dns')
-        if (err || !urlToCheck) {
+        if (err) {
             return res.json({error: 'invalid url'});
         }
         next();
@@ -122,7 +135,7 @@ app.post('/url-shortener/api/shorturl', (req, res, next) => {
 });
 
 app.get('/url-shortener/api/shorturl/:shortID', (req, res, next) => {
-    if (!Number(req.params)) {
+    if (!Number(req.params.shortID)) {
         return res.json({error: 'must be a number'});
     }
     findShortURL(req.params.shortID, (err, response) => {
