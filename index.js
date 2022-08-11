@@ -86,7 +86,7 @@ app.get('/url-shortener', (req, res) => {
 
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
     let urlToCheck = req.body.url;
-
+    console.log(req.body.url)
     if (urlToCheck.includes('https://')) {
         urlToCheck = urlToCheck.replace('https://', '');
     }
