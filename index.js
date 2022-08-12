@@ -89,7 +89,7 @@ app.get('/url-shortener', (req, res) => {
 **/
 
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
-    console.log('middleware', req.method, req.body, req.path)
+    // console.log('middleware', req.method, req.body, req.path)
     if (!req.body.url && req.method === 'POST') {
         return res.json({error: 'invalid url'});
     } else if (!req.body.url && req.path === '/') {
@@ -99,12 +99,16 @@ app.use('/url-shortener/api/shorturl', (req, res, next) => {
 });
 
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
+    // let regExp = /(h|f)(t)+p(s)*:(\/)+/;
+    let regExp = /(www)*[.]*\w+[.]\w+/g;
     let urlToCheck = req.body.url;
-
-    if (urlToCheck.includes('https://')) {
-        urlToCheck = urlToCheck.replace('https://', '');
+    console.log(req.body, urlToCheck)
+    if (urlToCheck.match(regExp)) {
+        urlToCheck = urlToCheck.match(regExp)[0]
     }
+    console.log(req.body, urlToCheck)
     dns.lookup(urlToCheck, (err) => {
+        console.log('checking dns')
         if (err) {
             return res.json({error: 'invalid url'});
         }
