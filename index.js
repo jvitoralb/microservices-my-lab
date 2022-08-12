@@ -89,7 +89,10 @@ app.get('/url-shortener', (req, res) => {
 **/
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
     if (!req.body.url) {
-        return res.status(404).send('Not found');
+        if (req.path === '/') {
+            return res.status(404).send('Not found');
+        }
+        req.body.url = 'undefined'
     }
     next();
 });
