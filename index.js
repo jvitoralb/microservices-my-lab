@@ -99,14 +99,13 @@ app.use('/url-shortener/api/shorturl', (req, res, next) => {
 });
 
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
-    // let regExp = /(www)*[.]*\w+[.]\w+/g;
-    let regExp = /(www)*[.]*([-*\w*-]*)\w+[.]\w+/g;
+    let regExp = /(www)*[.]*\w+[.]\w+|(www)*[.]*([-*\w*-]*)[.]\w+/g;
     let urlToCheck = req.body.url;
-    console.log(req.body, urlToCheck)
+
     if (urlToCheck.match(regExp)) {
-        urlToCheck = urlToCheck.match(regExp)[0]
+        urlToCheck = urlToCheck.match(regExp).join('');
     }
-    console.log(req.body, urlToCheck)
+
     dns.lookup(urlToCheck, (err) => {
         console.log('checking dns')
         if (err) {
