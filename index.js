@@ -12,10 +12,10 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
-app.use(express.static(__dirname));
+app.use(express.static(`${__dirname}/frontend`));
 
 app.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/public/index.html`);
+    res.sendFile(`${__dirname}/frontend/public/index.html`);
 });
 
 /**
@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 **/
 
 app.get('/timestamp', (req, res) => {
-    res.sendFile(`${__dirname}/public/timestamp.html`);
+    res.sendFile(`${__dirname}/frontend/public/timestamp.html`);
 });
 
 app.get('/timestamp/api/', (req, res) => {
@@ -63,7 +63,7 @@ app.get('/timestamp/api/:date?', (req, res) => {
 **/
 
 app.get('/req-header-parser', (req, res) => {
-    res.sendFile(`${__dirname}/public/reqheader.html`);
+    res.sendFile(`${__dirname}/frontend/public/reqheader.html`);
 });
 
 app.get('/req-header-parser/api/whoami', (req, res) => {
@@ -82,7 +82,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/url-shortener', (req, res) => {
-   res.sendFile(`${__dirname}/public/urlshortener.html`);
+   res.sendFile(`${__dirname}/frontend/public/urlshortener.html`);
 });
 
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
