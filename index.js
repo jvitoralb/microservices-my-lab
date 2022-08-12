@@ -77,16 +77,14 @@ app.get('/req-header-parser/api/whoami', (req, res) => {
 /**
  *  URL Shortener 
 **/
+
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/url-shortener', (req, res) => {
    res.sendFile(`${__dirname}/public/urlshortener.html`);
 });
-/**
- *  See if you can do better with this code
- *  make it look good and readable 
-**/
+
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
     if (!req.body.url) {
         if (req.path === '/') {
