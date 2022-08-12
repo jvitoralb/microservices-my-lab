@@ -83,38 +83,33 @@ app.use(express.urlencoded({extended: true}));
 app.get('/url-shortener', (req, res) => {
    res.sendFile(`${__dirname}/public/urlshortener.html`);
 });
-
 /**
- * fix get /api/shorturl, maybe add a malware func
+ *  See if you can do better with this code
+ *  make it look good and readable 
 **/
-
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
-    // console.log('middleware', req.method, req.body, req.path)
-    if (!req.body.url && req.method === 'POST') {
-        return res.json({error: 'invalid url'});
-    } else if (!req.body.url && req.path === '/') {
-        return  res.status(404).send('Not found');
+    if (!req.body.url) {
+        return res.status(404).send('Not found');
     }
     next();
 });
 
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
-    let regExp = /(www)*[.]*\w+[.]\w+|(www)*[.]*([-*\w*-]*)[.]\w+/g;
+    let regExp = /[www.]*(\w+|[-\w-]*[.\w]*)[.]\w+/g;
     let urlToCheck = req.body.url;
 
     if (urlToCheck.match(regExp)) {
         urlToCheck = urlToCheck.match(regExp).join('');
     }
-
     dns.lookup(urlToCheck, (err) => {
-        console.log('checking dns')
         if (err) {
             return res.json({error: 'invalid url'});
         }
         next();
     });
 }, (req, res, next) => {
-    const getShortedurl = () => {
+    const getShortedurl = (strErr) => {
+        console.log(strErr);
         findMainURL(req.body.url, (err, short) => {
             if (err) return next(err);
             res.json({
@@ -125,7 +120,7 @@ app.post('/url-shortener/api/shorturl', (req, res, next) => {
     }
     createSave(req.body.url, (err, savedData) => {
         if (err) {
-            return err.code === 11000 ? getShortedurl() : next(err);
+            return err.code === 11000 ? getShortedurl('E11000 duplicate key') : next(err);
         }
         Shortener.findById(savedData._id, (err, short) => {
             if (err) return next(err);
