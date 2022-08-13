@@ -18,11 +18,23 @@
         <h4>
             <a href="/">Home</a>
         </h4>
-        <form action="/url-shortener/api/shorturl" method="post">
+        <h4>Usage</h4>
+        <p>Post a URL like: https://www.google.com</p>
+        <p>Use the code received as {... "short_url": 44451} to be redirected to the URL posted</p>
+        <a href="/url-shortener/api/shorturl/44451">this.app.com/url-shortener/api/shorturl/44451</a>
+        <section id="note-section" class="note-sec">
+            <h4>Note: </h4>
+            <p>
+                Don't forget to use<span class="italic-text"> "/api/shorturl/short_url"</span>
+            </p>
+        </section>
+        <form action="/url-shortener/api/shorturl" method="post" class="shortener-form">
             <label for="url-input">URL</label>
-            <input id="url-input" name="url" type="text" required />
-            <button>Submit</button>
+            <input id="url-input" name="url" type="text" class="shortener-input" placeholder="https://www.exemple.url" required />
+            <button class="shortener-btn">Submit</button>
         </form>
+        <h4>Expected Output</h4>
+        <code>{"original_url": "https://www.google.com", "short_url": 44451}</code>
         <p class="credit">by jvitoralb</p>
     </main>
 </body>
