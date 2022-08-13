@@ -1,18 +1,16 @@
 import express from 'express';
 import cors from 'cors';
 import dns from 'node:dns';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import __dirname from './config.js';
 import Shortener, { createSave, findMainURL, findShortURL } from './shortenerApp.js';
 
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
 app.use(express.static(`${__dirname}/frontend`));
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/index.html`);
@@ -77,9 +75,6 @@ app.get('/req-header-parser/api/whoami', (req, res) => {
 /**
  *  URL Shortener 
 **/
-
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
 
 app.get('/url-shortener', (req, res) => {
    res.sendFile(`${__dirname}/frontend/public/urlshortener.html`);
@@ -147,6 +142,10 @@ app.get('/url-shortener/api/shorturl/:shortID', (req, res, next) => {
         res.redirect(response[0].mainUrl);
     });
 });
+
+/**
+ *  Now should probably work on this file structure 
+**/
 
 const listener = app.listen(PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);
