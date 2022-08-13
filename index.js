@@ -32,26 +32,24 @@ app.get('/timestamp/api/', (req, res) => {
     });
 });
 
-app.use('/timestamp/api/:date?', (req, res, next) => {
-    const isValidReq = new Date(req.params.date);
-    const unixReq = Number(req.params.date);
-    const newDateTime = new Date();
-
-    if (!isValidReq.getDate()) {
-        newDateTime.setTime(unixReq);
-
-        return newDateTime.toUTCString() !== 'Invalid Date' ? 
-        res.json({unix: unixReq, utc: newDateTime.toUTCString()}) :
-        res.json({error: 'Invalid Date'});
-    }
-    next();
-});
-
 app.get('/timestamp/api/:date?', (req, res) => {
     const dateReq = new Date(req.params.date);
-    const unixTimestamp = dateReq.getTime();
+    const dateReqUnix = dateReq.getTime();
+    const unixReq = Number(req.params.date);
+
+    if (dateReq.getDate()) {
+        return res.json({
+            unix: dateReqUnix,
+            utc: dateReq.toUTCString()
+        });
+    }
+    dateReq.setTime(unixReq);
+
+    if (dateReq.toUTCString() === 'Invalid Date') {
+        return res.json({error: 'Invalid Date'});
+    }
     res.json({
-        unix: unixTimestamp,
+        unix: unixReq,
         utc: dateReq.toUTCString()
     });
 });
