@@ -86,17 +86,22 @@ app.get('/url-shortener', (req, res) => {
 });
 
 app.use('/url-shortener/api/shorturl', (req, res, next) => {
+    const regExp = /(h|f)[tps]+/g;
+
     if (!req.body.url) {
         if (req.path === '/') {
             return res.status(404).send('Not found');
         }
-        req.body.url = 'undefined'
+        req.body.url = 'undefined';
+    }
+    if (!req.body.url.match(regExp)) {
+        req.body.url = `https://${req.body.url}`;
     }
     next();
 });
 
 app.post('/url-shortener/api/shorturl', (req, res, next) => {
-    let regExp = /[www.]*(\w+|[-\w-]*[.\w]*)[.]\w+/g;
+    const regExp = /[www.]*(\w+|[-\w-]*[.\w]*)[.]\w+/g;
     let urlToCheck = req.body.url;
 
     if (urlToCheck.match(regExp)) {
