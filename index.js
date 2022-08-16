@@ -13,6 +13,9 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(`${__dirname}/frontend`));
 
+/**
+ *  Home page
+**/
 app.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/index.html`);
 });
@@ -28,7 +31,7 @@ app.use('/timestamp', timestampRouter);
 app.use('/req-header-parser', headerRouter);
 
 /**
- *  URL Shortener 
+ *  URL Shortener
 **/
 app.use('/url-shortener', shorternerRouter);
 

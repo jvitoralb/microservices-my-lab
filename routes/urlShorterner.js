@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import dns from 'node:dns';
-import __dirname from '../config.js'
+import __dirname from '../config.js';
 import Shortener, { createSave, findMainURL, findShortURL } from '../shortenerApp.js';
 
 const shorternerRouter = Router();
@@ -38,19 +38,9 @@ shorternerRouter.post('/api/shorturl', (req, res, next) => {
         next();
     });
 }, (req, res, next) => {
-    const getShortedurl = (strErr) => {
-        console.log(strErr);
-        findMainURL(req.body.url, (err, short) => {
-            if (err) return next(err);
-            res.json({
-                original_url: short[0].mainUrl,
-                short_url: short[0].shortUrlCode
-            });
-        });
-    }
     createSave(req.body.url, (err, savedData) => {
         if (err) {
-            return err.code === 11000 ? getShortedurl('E11000 duplicate key') : next(err);
+            return err.code === 11000 ? next() : next(err);
         }
         Shortener.findById(savedData._id, (err, short) => {
             if (err) return next(err);
@@ -58,6 +48,14 @@ shorternerRouter.post('/api/shorturl', (req, res, next) => {
                 original_url: short.mainUrl,
                 short_url: short.shortUrlCode
             });
+        });
+    });
+}, (req, res, next) => {
+    findMainURL(req.body.url, (err, short) => {
+        if (err) return next(err);
+        res.json({
+            original_url: short[0].mainUrl,
+            short_url: short[0].shortUrlCode
         });
     });
 });
