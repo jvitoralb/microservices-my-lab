@@ -4,6 +4,7 @@ import __dirname from './config.js';
 import timestampRouter from './routes/timestamp.js';
 import headerRouter from './routes/headerParser.js';
 import shorternerRouter from './routes/urlShorterner.js';
+import exerciseRouter from './routes/exerciseTracker.js';
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -35,6 +36,10 @@ app.use('/req-header-parser', headerRouter);
 **/
 app.use('/url-shortener', shorternerRouter);
 
+/**
+ *  Exercise Router
+**/
+app.use('/exercise-tracker', exerciseRouter);
 
 const listener = app.listen(PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);
