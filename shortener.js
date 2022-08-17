@@ -1,26 +1,4 @@
-import * as dotenv from 'dotenv';
-import mongoose from 'mongoose';
-/**
- *  ****** Change this file setup ******
-**/
-dotenv.config();
-
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-const shortenerSchema = new mongoose.Schema({
-    mainUrl: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    shortUrlCode: {
-        type: Number,
-        required: true,
-        unique: true
-    }
-});
-
-const Shortener = mongoose.model('Shortener', shortenerSchema);
+import Shortener from './models/Shortener.js';
 
 export const createSave = (url, done) => {
     const num = parseInt(performance.now() * Math.random());
@@ -46,5 +24,3 @@ export const findShortURL = (shortURL, done) => {
         return err ? done(err) : done(null, result);
     });
 }
-
-export default Shortener;
