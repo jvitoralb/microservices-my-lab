@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import { Schema } from 'mongoose';
+
+const { Schema } = mongoose;
 
 const exerciseSchema = new Schema({
     username: 'have no idea',
