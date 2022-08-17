@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import __dirname from '../config.js';
 
-const timestampRouter = Router();
+const timestamp = Router();
 
-timestampRouter.get('/', (req, res) => {
+timestamp.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/timestamp.html`);
 });
 
-timestampRouter.get('/api/', (req, res) => {
+timestamp.get('/api/', (req, res) => {
     const now = new Date();
     res.json({
         unix: now.getTime(),
@@ -15,7 +15,7 @@ timestampRouter.get('/api/', (req, res) => {
     });
 });
 
-timestampRouter.get('/api/:date?', (req, res) => {
+timestamp.get('/api/:date?', (req, res) => {
     const dateReq = new Date(req.params.date);
     const dateReqUnix = dateReq.getTime();
     const unixReq = Number(req.params.date);
@@ -37,4 +37,4 @@ timestampRouter.get('/api/:date?', (req, res) => {
     });
 });
 
-export default timestampRouter;
+export default timestamp;

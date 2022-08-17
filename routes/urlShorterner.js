@@ -1,15 +1,16 @@
 import { Router } from 'express';
 import dns from 'node:dns';
 import __dirname from '../config.js';
-import Shortener, { createSave, findMainURL, findShortURL } from '../shortenerApp.js';
+import Shortener from '../models/Shortener.js';
+import { createSave, findMainURL, findShortURL } from '../shortener.js';
 
-const shorternerRouter = Router();
+const shortener = Router();
 
-shorternerRouter.get('/', (req, res) => {
+shortener.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/urlshortener.html`);
 });
 
-shorternerRouter.use('/api/shorturl', (req, res, next) => {
+shortener.use('/api/shorturl', (req, res, next) => {
     const regExp = /(h|f)[tps]+/g;
 
     if (!req.body.url) {
@@ -24,7 +25,7 @@ shorternerRouter.use('/api/shorturl', (req, res, next) => {
     next();
 });
 
-shorternerRouter.post('/api/shorturl', (req, res, next) => {
+shortener.post('/api/shorturl', (req, res, next) => {
     const regExp = /[www.]*(\w+|[-\w-]*[.\w]*)[.]\w+/g;
     let urlToCheck = req.body.url;
 
@@ -60,7 +61,7 @@ shorternerRouter.post('/api/shorturl', (req, res, next) => {
     });
 });
 
-shorternerRouter.get('/api/shorturl/:shortID', (req, res, next) => {
+shortener.get('/api/shorturl/:shortID', (req, res, next) => {
     if (!Number(req.params.shortID)) {
         return res.json({ error: 'must be a number' });
     }
@@ -70,4 +71,4 @@ shorternerRouter.get('/api/shorturl/:shortID', (req, res, next) => {
     });
 });
 
-export default shorternerRouter;
+export default shortener;

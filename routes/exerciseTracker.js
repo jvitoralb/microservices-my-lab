@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import __dirname from '../config.js';
 
-const exerciseRouter = Router();
+const exercise = Router();
 
-exerciseRouter.get('/', (req, res) => {
+exercise.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/exercisetracker.html`);
 });
 
-exerciseRouter.get('/api/users', (req, res) => {
+exercise.get('/api/users', (req, res) => {
     res.send([
         {
             username: 'User1',
@@ -20,7 +20,7 @@ exerciseRouter.get('/api/users', (req, res) => {
     ]);
 });
 
-exerciseRouter.post('/api/users', (req, res) => {
+exercise.post('/api/users', (req, res) => {
     const {username} = req.body;
 
     res.json({
@@ -29,4 +29,4 @@ exerciseRouter.post('/api/users', (req, res) => {
     });
 });
 
-export default exerciseRouter;
+export default exercise;

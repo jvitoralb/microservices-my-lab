@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import __dirname from '../config.js';
 
-const headerRouter = Router();
+const headerParser = Router();
 
-headerRouter.get('/', (req, res) => {
+headerParser.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/reqheader.html`);
 });
 
-headerRouter.get('/api/whoami', (req, res) => {
+headerParser.get('/api/whoami', (req, res) => {
     res.json({
         ipaddress: req.ip,
         language: req.acceptsLanguages().join(','),
@@ -15,4 +15,4 @@ headerRouter.get('/api/whoami', (req, res) => {
     });
 });
 
-export default headerRouter;
+export default headerParser;

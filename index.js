@@ -1,10 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import mongoose from 'mongoose';
+import * as dotenv from 'dotenv';
 import __dirname from './config.js';
-import timestampRouter from './routes/timestamp.js';
-import headerRouter from './routes/headerParser.js';
-import shorternerRouter from './routes/urlShorterner.js';
-import exerciseRouter from './routes/exerciseTracker.js';
+import timestamp from './routes/timestamp.js';
+import headerParser from './routes/headerParser.js';
+import shorterner from './routes/urlShorterner.js';
+import exercise from './routes/exerciseTracker.js';
+
+dotenv.config();
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -24,22 +28,25 @@ app.get('/', (req, res) => {
 /**
  *  Timestamp API project
 **/
-app.use('/timestamp', timestampRouter);
+app.use('/timestamp', timestamp);
 
 /**
  *  Request header parser API project
 **/
-app.use('/req-header-parser', headerRouter);
+app.use('/req-header-parser', headerParser);
 
 /**
  *  URL Shortener
 **/
-app.use('/url-shortener', shorternerRouter);
+app.use('/url-shortener', shorterner);
 
 /**
  *  Exercise Router
 **/
-app.use('/exercise-tracker', exerciseRouter);
+app.use('/exercise-tracker', exercise);
+
+
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const listener = app.listen(PORT, () => {
     console.log(`Server has started on port ${listener.address().port}`);
