@@ -44,3 +44,20 @@ export const createExercise = async (id, desc, dur, date) => {
         console.log(err);
     }
 }
+
+export const getUserLogs = async (usernameID) => {
+    const dataFound = await Exercise.find({username: usernameID});
+    let logs = dataFound.map(log => ({
+            description: log.description,
+            duration: log.duration,
+            date: log.date
+        })
+    );
+    let user = await dataFound[0].populate('username');
+    return {
+        _id: user.username._id,
+        username: user.username.username,
+        count: dataFound.length,
+        log: logs,
+    }
+}

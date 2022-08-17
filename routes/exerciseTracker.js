@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import __dirname from '../config.js';
-import { createUser, getAllUsers, createExercise } from '../exercise.js';
+import { createUser, getAllUsers, createExercise, getUserLogs } from '../exercise.js';
 
 const exercise = Router();
 
@@ -22,7 +22,7 @@ exercise.post('/api/users', async (req, res) => {
     }).status(201);
 });
 
-exercise.post('/api/users/:id/exercises', (req, res, next) => {
+exercise.post('/api/users/:_id/exercises', (req, res, next) => {
     const newDate = new Date(req.body.date).toDateString();
 
     if (newDate === 'Invalid Date') {
@@ -30,6 +30,7 @@ exercise.post('/api/users/:id/exercises', (req, res, next) => {
     } else {
         req.body.date = newDate;
     }
+    console.log(newDate, req.body.date)
     next();
 }, async (req, res) => {
     const { id, description, duration, date } = req.body;
@@ -42,6 +43,11 @@ exercise.post('/api/users/:id/exercises', (req, res, next) => {
         duration: savedExercise.duration,
         date: savedExercise.date
     });
+});
+
+exercise.get('/api/users/:_id/logs', async (req, res) => {
+    const logsData = await getUserLogs(req.params._id);
+    res.json(logsData);
 });
 
 export default exercise;
