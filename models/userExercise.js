@@ -3,7 +3,11 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const exerciseSchema = new Schema({
-    username: 'have no idea',
+    _id: Schema.Types.ObjectId,
+    username: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     description: String,
     duration: Number,
     date: Date
