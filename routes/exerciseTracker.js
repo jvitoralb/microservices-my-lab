@@ -25,7 +25,12 @@ exercise.post('/api/users', async (req, res) => {
 });
 
 exercise.post('/api/users/:_id/exercises', (req, res, next) => {
-    const newDate = new Date(req.body.date).toDateString();
+    const { id, description, duration, date } = req.body;
+    const newDate = new Date(date).toDateString();
+
+    if (!id || !description || !duration) {
+        return res.status(404).send('Something is missing!');
+    }
 
     if (newDate === 'Invalid Date') {
         req.body.date = new Date().toDateString();
