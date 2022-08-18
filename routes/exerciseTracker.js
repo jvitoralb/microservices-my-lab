@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import __dirname from '../config.js';
 import { createUser, getAllUsers, createExercise, getUserLogs } from '../exercise.js';
+import User from '../models/user.js';
+import Exercise from '../models/userExercise.js';
 
 const exercise = Router();
 
@@ -30,19 +32,20 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
     } else {
         req.body.date = newDate;
     }
-    console.log(newDate, req.body.date)
+
     next();
 }, async (req, res) => {
     const { id, description, duration, date } = req.body;
-    const savedExercise = await createExercise(id, description, duration, date);
-
+    const userExerciseData = await createExercise(id, description, duration, date);
     res.status(201).json({
-        _id: savedExercise.username.id,
-        username: savedExercise.username.username,
-        description: savedExercise.description,
-        duration: savedExercise.duration,
-        date: savedExercise.date
+        _id: userExerciseData._id,
+        username: userExerciseData.username,
+        date: userExerciseData.date,
+        description: userExerciseData.description,
+        duration: userExerciseData.duration,
     });
+    const deleted = await Exercise.deleteMany({});
+    console.log(deleted)
 });
 
 exercise.get('/api/users/:_id/logs', async (req, res) => {

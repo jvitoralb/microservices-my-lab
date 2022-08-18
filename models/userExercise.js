@@ -4,12 +4,12 @@ const { Schema } = mongoose;
 
 const exerciseSchema = new Schema({
     _id: Schema.Types.ObjectId,
-    username: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    description: String,
-    duration: Number,
+    desc: String,
+    dur: Number,
     date: String
 });
 

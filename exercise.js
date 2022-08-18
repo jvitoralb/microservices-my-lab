@@ -24,22 +24,33 @@ export const getAllUsers = async () => {
     }
 }
 
+const updateUser = async (user, update) => {
+    try {
+        const userUpdate = await User.findByIdAndUpdate(user, update);
+        return userUpdate;
+    } catch(err) {
+        console.log(err);
+    }
+}
+
 export const createExercise = async (id, desc, dur, date) => {
 
     const newExercise = new Exercise({
         _id: new mongoose.Types.ObjectId,
-        username: id,
-        description: desc,
-        duration: dur,
+        user: id,
+        desc: desc,
+        dur: dur,
         date: date
     });
-/**
- *  Still need to test if you really need to set an id, or  can just populate it
-**/
+
     try {
         const savedExercise = await newExercise.save();
-        await savedExercise.populate('username');
-        return savedExercise;
+        const userExercise = await updateUser(savedExercise.user._id, {
+            description: savedExercise.desc,
+            duration: savedExercise.dur,
+            date: savedExercise.date
+        });
+        return userExercise;
     } catch(err) {
         console.log(err);
     }
