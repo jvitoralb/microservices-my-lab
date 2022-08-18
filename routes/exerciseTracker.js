@@ -4,6 +4,7 @@ import { createUser, getAllUsers, createExercise, getUserLogs } from '../exercis
 import User from '../models/user.js';
 import Exercise from '../models/userExercise.js';
 
+
 const exercise = Router();
 
 exercise.get('/', (req, res) => {
@@ -43,13 +44,7 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
     const { id, description, duration, date } = req.body;
     const userExerciseData = await createExercise(id, description, duration, date);
 
-    res.status(201).json({
-        _id: userExerciseData._id,
-        username: userExerciseData.username,
-        date: userExerciseData.date,
-        description: userExerciseData.description,
-        duration: userExerciseData.duration,
-    });
+    res.status(201).json(userExerciseData);
 });
 
 exercise.delete('/api/del/all', async (req, res) => {

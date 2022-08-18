@@ -40,7 +40,7 @@ const updateUser = async (user, update) => {
             $push: {
                 logs: mongoose.mongo.ObjectId(update.log)
             }
-        }, options);
+        }, options).select('-logs -__v');
         return userUpdate;
     } catch(err) {
         console.log(err);
@@ -73,20 +73,12 @@ export const createExercise = async (id, desc, dur, date) => {
 
 export const getUserLogs = async (usernameID) => {
     try {
-        const userLogs = await User.findById(usernameID);
-        await userLogs.populate('logs');
         const countDocs = await Exercise.countDocuments({user: usernameID});
-
-        return {
-            username: userLogs.username,
-            _id: userLogs._id,
-            count: countDocs,
-            logs: userLogs.logs.map(log => ({
-                description: log.desc,
-                duration: log.dur,
-                date: log.date
-            }))
-        }
+        const userLogs = await User.findById(usernameID)
+        .select('_id username logs')
+        .populate('logs', '-_id -user -__v');
+        // need to put count in the object
+        return userLogs;
     } catch(err) {
         console.log(err)
     }
