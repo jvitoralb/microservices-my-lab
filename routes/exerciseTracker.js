@@ -34,14 +34,9 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
     }
 
     next();
-}, async (err, req, res, next) => {
+}, async (req, res) => {
     const { id, description, duration, date } = req.body;
     const userExerciseData = await createExercise(id, description, duration, date);
-
-    if (err) {
-        res.status(404);
-        next(err);
-    }
 
     res.status(201).json({
         _id: userExerciseData._id,
@@ -50,6 +45,13 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
         description: userExerciseData.description,
         duration: userExerciseData.duration,
     });
+});
+
+exercise.delete('/api/del/all', async (req, res) => {
+    const deletedUsers = await User.deleteMany({});
+    const deletedExercise = await Exercise.deleteMany({});
+    console.log(deletedUsers, deletedExercise);
+    res.send([deletedUsers, deletedExercise]);
 });
 
 exercise.get('/api/users/:_id/logs', async (req, res) => {

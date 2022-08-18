@@ -25,8 +25,22 @@ export const getAllUsers = async () => {
 }
 
 const updateUser = async (user, update) => {
+    let options = {
+        new: true,
+        upsert: true
+    }
+
     try {
-        const userUpdate = await User.findByIdAndUpdate(user, update);
+        const userUpdate = await User.findByIdAndUpdate(user, {
+            $set: {
+                description: update.desc,
+                duration: update.dur,
+                date: update.date,
+            },
+            $push: {
+                logs: mongoose.mongo.ObjectId(update.log)
+            }
+        }, options);
         return userUpdate;
     } catch(err) {
         console.log(err);
@@ -46,10 +60,11 @@ export const createExercise = async (id, desc, dur, date) => {
     try {
         const savedExercise = await newExercise.save();
         const userExercise = await updateUser(savedExercise.user._id, {
-            description: savedExercise.desc,
-            duration: savedExercise.dur,
-            date: savedExercise.date
-        });
+                desc: savedExercise.desc,
+                dur: savedExercise.dur,
+                date: savedExercise.date,
+                log: savedExercise._id
+            });
         return userExercise;
     } catch(err) {
         console.log(err);
@@ -57,18 +72,22 @@ export const createExercise = async (id, desc, dur, date) => {
 }
 
 export const getUserLogs = async (usernameID) => {
-    const dataFound = await Exercise.find({username: usernameID});
-    let logs = dataFound.map(log => ({
-            description: log.description,
-            duration: log.duration,
-            date: log.date
-        })
-    );
-    let user = await dataFound[0].populate('username');
-    return {
-        _id: user.username._id,
-        username: user.username.username,
-        count: dataFound.length,
-        log: logs,
+    try {
+        const userLogs = await User.findById(usernameID);
+        await userLogs.populate('logs');
+        const countDocs = await Exercise.countDocuments({user: usernameID});
+
+        return {
+            username: userLogs.username,
+            _id: userLogs._id,
+            count: countDocs,
+            logs: userLogs.logs.map(log => ({
+                description: log.desc,
+                duration: log.dur,
+                date: log.date
+            }))
+        }
+    } catch(err) {
+        console.log(err)
     }
 }
