@@ -34,9 +34,15 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
     }
 
     next();
-}, async (req, res) => {
+}, async (err, req, res, next) => {
     const { id, description, duration, date } = req.body;
     const userExerciseData = await createExercise(id, description, duration, date);
+
+    if (err) {
+        res.status(404);
+        next(err);
+    }
+
     res.status(201).json({
         _id: userExerciseData._id,
         username: userExerciseData.username,
