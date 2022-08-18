@@ -44,8 +44,6 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
         description: userExerciseData.description,
         duration: userExerciseData.duration,
     });
-    const deleted = await Exercise.deleteMany({});
-    console.log(deleted)
 });
 
 exercise.get('/api/users/:_id/logs', async (req, res) => {
