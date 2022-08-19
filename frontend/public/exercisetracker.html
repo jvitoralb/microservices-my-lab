@@ -18,10 +18,48 @@
         <h4>
             <a href="/">Home</a>
         </h4>
-        <h4>Hello Exercise Tracker</h4>
+        <h4>Usage</h4>
+        <p>Use the <span class="italic-text">Create Username</span> form to get your username's id:</p>
+        <code>{"username":"b-harpyia","_id":"62fef8fececf3acf2907b511"}</code>
+        <p>Then, use the <span class="italic-text">Exercise</span> form to log a exercise to your id:</p>
+        <code>{"_id":"62fef8fececf3acf2907b511","username":"b-harpyia",
+            "date":"Thu Aug 18 2022","description":"Run","duration":30}</code>
+        <p>You can also get your exercises Logs using the <span class="italic-text">Logs</span> form:</p>
+        <code>{PUT LOG CODE EXEMPLE HERE}</code>
+        <section id="track-exercises-util" class="exercise-tracker">
+            <form id="create-user-form" action="/exercise-tracker/api/users" method="post" class="create-user">
+                <h4>Create Username</h4>
+                <label for="username">Username:</label>
+                <input id="username-input" name="username" type="text" placeholder="Username" required />
+                <button id="submit-user">Submit</button>
+            </form>
 
+            <form id="create-exercise-form" method="post" class="create-exercise">
+                <h4>Exercise</h4>
+                <label for="user-id">User ID:</label>
+                <input id="user-id" name="_id" type="text" placeholder="_id" required />
+                <label for="exercise-description">Description:</label>
+                <input id="exercise-description" name="description" type="text" placeholder="Exercise description"
+                    required />
+                <label for="exercise-duration">Duration:</label>
+                <input id="exercise-duration" name="duration" type="number" placeholder="Minutes" required />
+                <label for="exercise-date">Date:</label>
+                <input id="exercise-date" name="date" type="text" placeholder="1970-01-01" />
+                <button id="submit-exercise">Submit</button>
+            </form>
+
+            <form id="exercises-logs" method="get" class="exercise-logs">
+                <h4>Logs</h4>
+                <label for="user-logs-id">User ID:</label>
+                <input id="user-logs-id" name="_id" type="text" placeholder="_id" required />
+                <button id="submit-logs">Get Logs</button>
+            </form>
+        </section>
         <p class="credit">by jvitoralb</p>
     </main>
+
+
+    <script src="../src/app.js"></script>
 </body>
 
 </html>

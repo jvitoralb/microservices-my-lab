@@ -5,16 +5,37 @@
     font-family: 'Inter', sans-serif;
 }
 
+/**
+ *  General Configs
+**/
 a {
     color: blue;
 }
 
 input {
+    padding: 4px;
     outline: none;
+    margin-bottom: 8px;
+}
+
+button {
+    padding: 4px 6px;
+    
+}
+
+input, button {
+    border-radius: 4px;
+    border: 1px solid #ccc;
 }
 
 .italic-text {
     font-style: italic;
+}
+
+code {
+    padding: 3px;
+    background-color: #ffffff;
+    text-align: center;
 }
 
 header {
@@ -37,12 +58,6 @@ main > * {
     margin: 6px 0;
 }
 
-code {
-    padding: 3px;
-    background-color: #ffffff;
-    text-align: center;
-}
-
 .credit {
     font-size: 12px;
 }
@@ -61,21 +76,38 @@ code {
     justify-content: center;
 }
 
-.shortener-form > input, button {
+/* .shortener-form > input, button {
     border-radius: 4px;
     border: 1px solid #ccc;
-}
+} */
 
-.shortener-input {
+/* .shortener-input {
     padding: 4px;
     margin-bottom: 8px;
-}
-
-.shortener-btn {
-    padding: 4px 6px;
-}
+} */
 
 .shortener-btn:hover {
+    /*
+    *   Add to all buttons
+    */
     cursor: pointer;
     box-shadow: inset 0 0 10px rgb(221, 221, 221);
+}
+
+/* 
+ *  Exercise Tracker
+*/
+.create-user, .create-exercise, .exercise-logs {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+form > input {
+    margin: 6px 0;
+} 
+
+.exercise-tracker {
+    display: flex;
 }
