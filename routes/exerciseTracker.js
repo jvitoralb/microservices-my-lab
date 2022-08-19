@@ -27,10 +27,14 @@ exercise.post('/api/users', async (req, res) => {
     }).status(201);
 });
 
-exercise.post('/api/users/:_id/exercises', (req, res, next) => {
-    const { _id, description, duration, date } = req.body;
-    const newDate = new Date(date).toDateString();
-    if (!_id || !description || !duration) {
+exercise.post('/api/users/:id/exercises', (req, res, next) => {
+    const { id } = req.params;
+    const { description, duration, date } = req.body;
+    const [year, month, day] = (() => !date ? 'NVD' : date.split('-'))();
+    const newDate = new Date(year, month - 1, day).toDateString();
+ 
+    if (!id || !description || !duration) {
+        // Make this a middleware to return Data missing or something
         return res.status(404).send('Something is missing!');
     }
 
@@ -42,22 +46,25 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
 
     next();
 }, async (req, res) => {
-    const { _id, description, duration, date } = req.body;
-    const userExerciseData = await createExercise(_id, description, duration, date);
+    const { id } = req.params
+    const { description, duration, date } = req.body;
+    const userExerciseData = await createExercise(id, description, duration, date);
 
-    res.status(201).json(userExerciseData);
+    res.json(userExerciseData).status(201);
 });
 
 exercise.delete('/api/del/all', async (req, res) => {
+    // Uso só quando necessário, pro desenvolvimento~
     const deletedUsers = await User.deleteMany({});
     const deletedExercise = await Exercise.deleteMany({});
     console.log(deletedUsers, deletedExercise);
     res.send([deletedUsers, deletedExercise]);
 });
 
-exercise.get('/api/users/:_id/logs', async (req, res) => {
-    const logsData = await getUserLogs(req.params._id);
-    res.json(logsData);
+exercise.get('/api/users/:id/logs', async (req, res) => {
+    const { params, query } = req;
+    const logsData = await getUserLogs(params.id, query.limit, query.from, query.to);
+    res.json(logsData).status(200);
 });
 
 export default exercise;

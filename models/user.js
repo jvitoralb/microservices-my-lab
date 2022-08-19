@@ -6,12 +6,12 @@ export const userSchema = new Schema({
     username: {
         type: String,
         required: true,
-        unique: true
+        unique: false
     },
     description: String,
     duration: Number,
     date: String,
-    logs: [{
+    log: [{
         type: Schema.Types.ObjectId,
         ref: 'Exercise'
     }]

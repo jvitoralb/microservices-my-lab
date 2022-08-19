@@ -25,7 +25,7 @@ export const getAllUsers = async () => {
     }
 }
 
-const updateUser = async (user, update) => {
+const updateUser = async (user, updateSet, updatePush) => {
     let options = {
         new: true,
         upsert: true
@@ -34,14 +34,12 @@ const updateUser = async (user, update) => {
     try {
         const userUpdate = await User.findByIdAndUpdate(user, {
             $set: {
-                description: update.desc,
-                duration: update.dur,
-                date: update.date,
+                ...updateSet
             },
             $push: {
-                logs: mongoose.mongo.ObjectId(update.log)
+                log: mongoose.mongo.ObjectId(updatePush.log)
             }
-        }, options).select('-logs -__v');
+        }, options).select('-log -__v');
         return userUpdate;
     } catch(err) {
         console.log(err);
@@ -60,29 +58,40 @@ export const createExercise = async (id, desc, dur, date) => {
     try {
         const savedExercise = await newExercise.save();
         const userExercise = await updateUser(savedExercise.user._id, {
-                desc: savedExercise.description,
-                dur: savedExercise.duration,
-                date: savedExercise.date,
-                log: savedExercise._id
-            });
+                description: desc,
+                duration: dur,
+                date: date,
+            }, {log: savedExercise._id});
         return userExercise;
     } catch(err) {
         console.log(err);
     }
 }
 
-export const getUserLogs = async (usernameID) => {
+export const getUserLogs = async (userID, limit, from, to) => {
+    console.log(userID, from, to)
     try {
-        const countDocs = await Exercise.countDocuments({user: usernameID});
-        const userLogs = await User.findById(usernameID)
-        .populate('logs', '-_id -user -__v');
-        const { _id, username, logs } = userLogs;
+        const countDocs = await Exercise.countDocuments({user: userID});
+        const { id, username, log } = await User.findById(userID)
+        .populate({
+            path:'log',
+            select: '-_id -user -__v',
+            // match: (log) => {
+            //     if (!from || !to) return null;
+            //     if (new Date(log.date).getTime() > new Date(from).getTime() &&
+            //         new Date(log.date).getTime() < new Date(to).getTime()) {
+            //             return { date: log.date }
+            //     }
+            //     return null;
+            // },
+            perDocumentLimit: limit || null
+        });
 
         return {
-            _id,
             username,
             count: countDocs,
-            logs,
+            id,
+            log
         };
     } catch(err) {
         console.log(err)
