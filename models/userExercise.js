@@ -8,8 +8,8 @@ const exerciseSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    desc: String,
-    dur: Number,
+    description: String,
+    duration: Number,
     date: String
 });
 

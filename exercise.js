@@ -17,10 +17,8 @@ export const createUser = async (name) => {
 
 export const getAllUsers = async () => {
     try {
-        const allUsers = await User.find({});
-        /**
-         *  This returns the object literals with logs NOT POPULATED
-        **/
+        const allUsers = await User.find({})
+        .select('_id username');
         return allUsers;
     } catch(err) {
         console.log(err);
@@ -51,20 +49,19 @@ const updateUser = async (user, update) => {
 }
 
 export const createExercise = async (id, desc, dur, date) => {
-
     const newExercise = new Exercise({
         _id: new mongoose.Types.ObjectId,
         user: id,
-        desc: desc,
-        dur: dur,
+        description: desc,
+        duration: dur,
         date: date
     });
 
     try {
         const savedExercise = await newExercise.save();
         const userExercise = await updateUser(savedExercise.user._id, {
-                desc: savedExercise.desc,
-                dur: savedExercise.dur,
+                desc: savedExercise.description,
+                dur: savedExercise.duration,
                 date: savedExercise.date,
                 log: savedExercise._id
             });
@@ -78,10 +75,15 @@ export const getUserLogs = async (usernameID) => {
     try {
         const countDocs = await Exercise.countDocuments({user: usernameID});
         const userLogs = await User.findById(usernameID)
-        .select('_id username logs')
         .populate('logs', '-_id -user -__v');
-        // need to put count in the object and change logs keys names
-        return userLogs;
+        const { _id, username, logs } = userLogs;
+
+        return {
+            _id,
+            username,
+            count: countDocs,
+            logs,
+        };
     } catch(err) {
         console.log(err)
     }

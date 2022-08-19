@@ -104,9 +104,9 @@ main > * {
     flex-direction: column;
 }
 
-form > input {
-    margin: 6px 0;
-} 
+form > input, h4 {
+    margin-bottom: 6px;
+}
 
 .exercise-tracker {
     display: flex;
