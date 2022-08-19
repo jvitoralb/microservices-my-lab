@@ -15,7 +15,9 @@ exercise.get('/api/users', async (req, res) => {
     const usersData = await getAllUsers();
     res.send(usersData).status(200);
 });
-
+/**
+ *  Set middleware in case username is not defined go 404 perhaps
+**/
 exercise.post('/api/users', async (req, res) => {
     const { username } = req.body;
     const savedData = await createUser(username);
@@ -26,10 +28,9 @@ exercise.post('/api/users', async (req, res) => {
 });
 
 exercise.post('/api/users/:_id/exercises', (req, res, next) => {
-    const { id, description, duration, date } = req.body;
+    const { _id, description, duration, date } = req.body;
     const newDate = new Date(date).toDateString();
-
-    if (!id || !description || !duration) {
+    if (!_id || !description || !duration) {
         return res.status(404).send('Something is missing!');
     }
 
@@ -41,8 +42,8 @@ exercise.post('/api/users/:_id/exercises', (req, res, next) => {
 
     next();
 }, async (req, res) => {
-    const { id, description, duration, date } = req.body;
-    const userExerciseData = await createExercise(id, description, duration, date);
+    const { _id, description, duration, date } = req.body;
+    const userExerciseData = await createExercise(_id, description, duration, date);
 
     res.status(201).json(userExerciseData);
 });

@@ -18,6 +18,9 @@ export const createUser = async (name) => {
 export const getAllUsers = async () => {
     try {
         const allUsers = await User.find({});
+        /**
+         *  This returns the object literals with logs NOT POPULATED
+        **/
         return allUsers;
     } catch(err) {
         console.log(err);
@@ -77,7 +80,7 @@ export const getUserLogs = async (usernameID) => {
         const userLogs = await User.findById(usernameID)
         .select('_id username logs')
         .populate('logs', '-_id -user -__v');
-        // need to put count in the object
+        // need to put count in the object and change logs keys names
         return userLogs;
     } catch(err) {
         console.log(err)
