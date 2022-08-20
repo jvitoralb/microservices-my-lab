@@ -10,7 +10,6 @@ export const userSchema = new Schema({
     },
     description: String,
     duration: Number,
-    date: String,
     log: [{
         type: Schema.Types.ObjectId,
         ref: 'Exercise'
