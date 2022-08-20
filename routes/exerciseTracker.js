@@ -30,19 +30,19 @@ exercise.post('/api/users', async (req, res) => {
 exercise.post('/api/users/:id/exercises', (req, res, next) => {
     const { id } = req.params;
     const { description, duration, date } = req.body;
-    const [year, month, day] = (() => !date ? 'NVD' : date.split('-'))();
-    const newDate = new Date(year, month - 1, day).toDateString();
- 
+    const reqDate = new Date(date);
+
     if (!id || !description || !duration) {
         // Make this a middleware to return Data missing or something
         return res.status(404).send('Something is missing!');
     }
 
-    if (newDate === 'Invalid Date') {
-        req.body.date = new Date().toDateString();
+    if (reqDate == 'Invalid Date') {
+        req.body.date = new Date().toISOString().slice(0, 10);
     } else {
-        req.body.date = newDate;
+        req.body.date = reqDate.toISOString().slice(0, 10);
     }
+    console.log(req.body.date)
 
     next();
 }, async (req, res) => {

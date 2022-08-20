@@ -46,47 +46,56 @@ const updateUser = async (user, updateSet, updatePush) => {
     }
 }
 
-export const createExercise = async (id, desc, dur, date) => {
+export const createExercise = async (id, desc, dur, reqDate) => {
     const newExercise = new Exercise({
         _id: new mongoose.Types.ObjectId,
         user: id,
         description: desc,
         duration: dur,
-        date: date
+        date: reqDate
     });
-
+// Probably not gonna save exercise in User model so I can remove thi reqDate thing
     try {
         const savedExercise = await newExercise.save();
-        const userExercise = await updateUser(savedExercise.user._id, {
+        const { _id, username, description, duration, date } = await updateUser(savedExercise.user._id, {
                 description: desc,
                 duration: dur,
-                date: date,
+                date: reqDate,
             }, {log: savedExercise._id});
-        return userExercise;
+        const [year, month, day] = date.split('-');
+
+        return {
+            _id,
+            username,
+            description,
+            duration,
+            date: new Date(year, month - 1, day ).toDateString()
+        };
     } catch(err) {
         console.log(err);
     }
 }
 
 export const getUserLogs = async (userID, limit, from, to) => {
-    console.log(userID, from, to)
+    // then go back to req and make something in case there's only from or to
+    const matchConfig = {
+        date: {
+            $gt: from,
+            $lt: to
+        }
+    }
     try {
         const countDocs = await Exercise.countDocuments({user: userID});
         const { id, username, log } = await User.findById(userID)
         .populate({
             path:'log',
             select: '-_id -user -__v',
-            // match: (log) => {
-            //     if (!from || !to) return null;
-            //     if (new Date(log.date).getTime() > new Date(from).getTime() &&
-            //         new Date(log.date).getTime() < new Date(to).getTime()) {
-            //             return { date: log.date }
-            //     }
-            //     return null;
-            // },
+            match: from && to ? matchConfig : null,
             perDocumentLimit: limit || null
         });
-
+        /**
+         *  Need to fix the log dates 
+        **/
         return {
             username,
             count: countDocs,
