@@ -3,6 +3,12 @@ import User from './models/user.js';
 import Exercise from './models/userExercise.js';
 
 
+export const convertDate = (date) => {
+    const [year, month, day] = date.split('-');
+    let dateString = new Date(year, month - 1, day );
+    return dateString.toDateString();
+}
+
 export const createUser = async (name) => {
     const newUser = new User({
         username: name
@@ -25,19 +31,29 @@ export const getAllUsers = async () => {
     }
 }
 
-const updateUser = async (user, updateSet, updatePush) => {
+export const userExists = async (userID, res, next) => {
+    try {
+        const result = await User.exists({ _id: userID});
+        if (result === null) throw new Error('UserID does not exists');
+        next();
+    } catch (err) {
+        console.log(err);
+        res.status(404).send(err.message);
+    }
+}
+
+const updateUser = async (user, update) => {
     let options = {
-        new: true,
-        upsert: true
+        new: true
     }
 
     try {
         const userUpdate = await User.findByIdAndUpdate(user, {
             $set: {
-                ...updateSet
+                ...update.set
             },
             $push: {
-                log: mongoose.mongo.ObjectId(updatePush.log)
+                log: mongoose.mongo.ObjectId(update.push.log)
             }
         }, options).select('-log -__v');
         return userUpdate;
@@ -46,30 +62,31 @@ const updateUser = async (user, updateSet, updatePush) => {
     }
 }
 
-export const createExercise = async (id, desc, dur, reqDate) => {
+export const createExercise = async (id, desc, dur, date) => {
     const newExercise = new Exercise({
         _id: new mongoose.Types.ObjectId,
         user: id,
         description: desc,
         duration: dur,
-        date: reqDate
+        date: date
     });
-// Probably not gonna save exercise in User model so I can remove thi reqDate thing
+
     try {
         const savedExercise = await newExercise.save();
-        const { _id, username, description, duration, date } = await updateUser(savedExercise.user._id, {
+        const { _id, username, description, duration } = await updateUser(savedExercise.user._id, {
+            set: {
                 description: desc,
-                duration: dur,
-                date: reqDate,
-            }, {log: savedExercise._id});
-        const [year, month, day] = date.split('-');
+                duration: dur
+            },
+            push: { log: savedExercise._id }
+        });
 
         return {
             _id,
             username,
             description,
             duration,
-            date: new Date(year, month - 1, day ).toDateString()
+            date: convertDate(date)
         };
     } catch(err) {
         console.log(err);
@@ -77,7 +94,7 @@ export const createExercise = async (id, desc, dur, reqDate) => {
 }
 
 export const getUserLogs = async (userID, limit, from, to) => {
-    // then go back to req and make something in case there's only from or to
+    // from and to just works if both exist
     const matchConfig = {
         date: {
             $gt: from,
@@ -93,16 +110,28 @@ export const getUserLogs = async (userID, limit, from, to) => {
             match: from && to ? matchConfig : null,
             perDocumentLimit: limit || null
         });
-        /**
-         *  Need to fix the log dates 
-        **/
         return {
             username,
             count: countDocs,
             id,
-            log
+            log: log.map(obj => ({
+                description: obj.description,
+                duration: obj.duration,
+                date: convertDate(obj.date)
+            }))
         };
     } catch(err) {
         console.log(err)
     }
 }
+
+const tracker = {
+    createUser,
+    getAllUsers,
+    userExists,
+    updateUser,
+    createExercise,
+    getUserLogs
+}
+
+export default tracker;
