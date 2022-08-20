@@ -1,7 +1,7 @@
-import { Router } from 'express';
+import { Router } from 'express';   
 import __dirname from '../config.js';
 import tracker from '../exercise.js';
-import checkBody from '../middleware/exercise.js';
+import exerciseBody from '../middleware/exercise.js';
 import User from '../models/user.js';
 import Exercise from '../models/userExercise.js';
 
@@ -14,42 +14,37 @@ exercise.get('/', (req, res) => {
 
 exercise.get('/api/users', async (req, res) => {
     const usersData = await tracker.getAllUsers();
-    res.send(usersData).status(200);
+    res.status(200).send(usersData);
 });
-/**
- *  Set middleware in case username is not defined go 404 perhaps
-**/
+
 exercise.post('/api/users', async (req, res) => {
     const { username } = req.body;
-    const savedData = await tracker.createUser(username);
-    res.json({
+    const savedData = await tracker.createUser(username, res);
+    res.status(201).json({
         username: savedData.username,
         _id: savedData._id
-    }).status(201);
+    });
 });
 
-exercise.post('/api/users/:id/exercises', checkBody, async (req, res, next) => {
-    return await tracker.userExists(req.params.id, res, next);
-}, async (req, res) => {
-    const { id } = req.params
+exercise.post('/api/users/:id/exercises', exerciseBody, async (req, res) => {
+    const { id } = req.params;
     const { description, duration, date } = req.body;
     const userExerciseData = await tracker.createExercise(id, description, duration, date);
-
-    res.json(userExerciseData).status(201);
+    res.status(201).json(userExerciseData);
 });
 
-// exercise.delete('/api/del/all', async (req, res) => {
-//     // Uso só quando necessário, pro desenvolvimento~
-//     const deletedUsers = await User.deleteMany({});
-//     const deletedExercise = await Exercise.deleteMany({});
-//     console.log(deletedUsers, deletedExercise);
-//     res.send([deletedUsers, deletedExercise]);
-// });
+exercise.delete('/api/del/all', async (req, res) => {
+    // Uso só quando necessário, pro desenvolvimento~
+    const deletedUsers = await User.deleteMany({});
+    const deletedExercise = await Exercise.deleteMany({});
+    console.log(deletedUsers, deletedExercise);
+    res.send([deletedUsers, deletedExercise]);
+});
 
 exercise.get('/api/users/:id/logs', async (req, res) => {
     const { params, query } = req;
     const logsData = await tracker.getUserLogs(params.id, query.limit, query.from, query.to);
-    res.json(logsData).status(200);
+    res.status(200).json(logsData);
 });
 
 export default exercise;

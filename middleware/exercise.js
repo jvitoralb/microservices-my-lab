@@ -1,4 +1,6 @@
-const checkBody = (req, res, next) => {
+import { userExists } from '../exercise.js';
+
+const exerciseBody = (req, res, next) => {
     const { params, body } = req;
     const reqDate = new Date(body.date);
 
@@ -8,10 +10,8 @@ const checkBody = (req, res, next) => {
 
     if (reqDate == 'Invalid Date') {
         req.body.date = new Date().toISOString().slice(0, 10);
-    } else {
-        req.body.date = reqDate.toISOString().slice(0, 10);
     }
-    next();
+    return userExists(params.id, res, next);
 }
 
-export default checkBody;
+export default exerciseBody;

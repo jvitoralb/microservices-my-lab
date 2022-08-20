@@ -9,7 +9,7 @@ export const convertDate = (date) => {
     return dateString.toDateString();
 }
 
-export const createUser = async (name) => {
+export const createUser = async (name, res) => {
     const newUser = new User({
         username: name
     });
@@ -18,6 +18,7 @@ export const createUser = async (name) => {
         return savedUser;
     } catch(err) {
         console.log(err);
+        res.status(404).send(err.message)
     }
 }
 
