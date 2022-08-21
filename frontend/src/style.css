@@ -121,6 +121,13 @@ main > * {
     "form usage";
 }
 
+@media (max-width: 660px) {
+    .tracker-main > section {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
 section > h3 {
     text-align: center;
     grid-area: title;
@@ -132,13 +139,6 @@ section > h3 {
     align-items: center;
     flex-direction: column;
     grid-area: form;
-}
-
-@media (max-width: 660px) {
-    .tracker-main > section {
-        display: flex;
-        flex-direction: column;
-    }
 }
 
 .usage-sec {
