@@ -14,53 +14,110 @@
     <header id="header">
         <h2>Exercise Tracker Microservice</h2>
     </header>
-    <main id="main">
+    <main id="main" class="tracker-main">
         <h4>
             <a href="/">Home</a>
         </h4>
-        <h4>Usage</h4>
-        <p>Use the <span class="italic-text">Create Username</span> form to get your username and id:</p>
-        <code>{"username": "b-harpyia", "_id": "62fef8fececf3acf2907b511"}</code>
-        <p>Then, use the <span class="italic-text">Exercise</span> form to log a exercise to your id:</p>
-        <code>{"_id": "62fef8fececf3acf2907b511", "username": "b-harpyia", 
-            "date": "Thu Aug 18 2022", "description": "Run", "duration": 30}</code>
-        <p>You can also get your exercises Logs using the <span class="italic-text">Logs</span> form:</p>
-        <code>{PUT LOG CODE EXEMPLE HERE}</code>
-        <!-- <h1>ADD CREATEUSER EXEMPLE LINKS?</h1>
-        <h1>ADD CREATEEXERCISE LINKS?</h1>
-        <h1>ADD GETLOGS LINKS?</h1>
-        <h1>PERHAPS LET A USER SAVED HARPYJA</h1>
-        <h1>ADD GETALLUSERS LINKS</h1>
-        <h1>ATT CODE EXEMPLES WITH HARPYJA</h1> -->
-        <section id="track-exercises-util" class="exercise-tracker">
-            <form id="create-user-form" action="/exercise-tracker/api/users" method="post" class="create-user">
-                <h4>Create Username</h4>
+        <section id="create-user-section">
+            <form id="user-form" action="/exercise-tracker/api/users" method="post" class="create-user">
+                <h4>Create User</h4>
                 <label for="username">Username:</label>
                 <input id="username-input" name="username" type="text" placeholder="Username" required />
                 <button id="submit-user">Submit</button>
             </form>
+            <section id="create-user-usage" class="usage-sec">
+                <h4>Usage</h4>
+                <p>Use the <span class="italic-text">Create User</span> form to get your username and id</p>
+                <code>{
+                        "username": "harpyja",
+                        "_id": "63012a9c8541ec94d7ab1e54"
+                    }</code>
+                <p>To get a list with a list with all users:</p>
+                <a href="/exercise-tracker/api/users" target="_blank" class="get-users">
+                    Get All Users
+                </a>
+            </section>
+        </section>
 
-            <form id="create-exercise-form" method="post" class="create-exercise">
-                <h4>Exercise</h4>
+        <section id="create-exercise-section">
+            <form id="exercise-form" method="post" class="create-exercise">
+                <h4>Create Exercise</h4>
                 <label for="user-id">User ID:</label>
                 <input id="user-id" name="_id" type="text" placeholder="_id" required />
                 <label for="exercise-description">Description:</label>
-                <input id="exercise-description" name="description" type="text" placeholder="Exercise description"
-                    required />
+                <input id="exercise-description" name="description" type="text"
+                    placeholder="Exercise description" required />
                 <label for="exercise-duration">Duration:</label>
                 <input id="exercise-duration" name="duration" type="number" placeholder="Minutes" required />
                 <label for="exercise-date">Date:</label>
-                <input id="exercise-date" name="date" type="text" placeholder="1970-01-01" />
+                <input id="exercise-date" name="date" type="text"  />
                 <button id="submit-exercise">Submit</button>
             </form>
-
-            <form id="exercises-logs" method="get" class="exercise-logs">
+            <section id="create-exercise-usage" class="usage-sec">
+                <h4>Usage</h4>
+                <p>Then, use the <span class="italic-text">Exercise</span> form to log a exercise to your id:</p>
+                <code>{
+                    "_id": "63012a9c8541ec94d7ab1e54",<br/>
+                    "username": "harpyja",
+                    "description": "Walk",<br/>
+                    "duration": 30,
+                    "date": "Sat Aug 20 2022"
+                    }</code>
+            </section>
+        </section>
+        <section id="exercises-logs-section">
+            <form id="logs-form" method="get" class="exercise-logs">
                 <h4>Logs</h4>
-                <label for="user-logs-id">User ID:</label>
-                <input id="user-logs-id" name="_id" type="text" placeholder="_id" required />
+                <label for="logs-id">User ID:</label>
+                <input id="logs-id" name="_id" type="text" placeholder="_id" required />
                 <button id="submit-logs">Get Logs</button>
             </form>
+            <section id="exercises-logs-usage" class="usage-sec">
+                <h4>Usage</h4>
+                <p>You can also get your exercises Logs using the <span class="italic-text">Logs</span> form:</p>
+                <code>{
+                    "username": "harpyja",
+                    "count": 1,
+                    "_id": "63012a9c8541ec94d7ab1e54",
+                    "log": [
+                        {
+                            "description": "Walk",
+                            "duration": 30,
+                            "date": "Sat Aug 20 2022"
+                        }
+                    ]
+                }</code>
+                <p class="logs-anchor">Set the url with _id 
+                    <a href="/api/user/63012a9c8541ec94d7ab1e54/logs" target="_blank">
+                        /api/user/63012a9c8541ec94d7ab1e54/logs
+                    </a>
+                </p>
+                <h4>Note</h4>
+                <p>You can also set a 
+                    <span class="italic-text">limit</span>, 
+                    <span class="italic-text">from</span> and 
+                    <span class="italic-text">to</span>.
+                </p>
+                <ul id="unordered-notes-list" class="notes-list">
+                    <li>
+                        <span class="bold-text">Limit</span>:
+                        integer to set how many logs the log array should have.
+                    </li>
+                    <li>
+                        <span class="bold-text">From&To</span>: dates in format <span class="italic-text">YYYY-MM-DD</span>
+                        to only show the exercises in the log array within the provided date interval.
+                    </li>
+                </ul>
+                <p>
+                    Use <span class="italic-text">GET /api/users/:_id/logs?[from][&to][&limit]</span>
+                </p>
+                <p>Don't forget to use 
+                    <a><span class="italic-text">this.app.com/exercise-tracker</span></a>
+                    when setting URL's
+                </p>
+            </section>
         </section>
+
         <p class="credit">by jvitoralb</p>
     </main>
 
