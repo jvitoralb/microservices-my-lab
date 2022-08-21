@@ -1,9 +1,9 @@
 import { Router } from 'express';   
 import __dirname from '../config.js';
-import tracker from '../exercise.js';
+import tracker from '../controllers/exercise.js';
 import exerciseBody from '../middleware/exercise.js';
-import User from '../models/user.js';
 import Exercise from '../models/userExercise.js';
+import User from '../models/User.js';
 
 
 const exercise = Router();
@@ -42,6 +42,9 @@ exercise.delete('/api/del/all', async (req, res) => {
 });
 
 exercise.get('/api/users/:id/logs', async (req, res) => {
+    /**
+     *  Need to check if user exists
+    **/
     const { params, query } = req;
     const logsData = await tracker.getUserLogs(params.id, query.limit, query.from, query.to);
     res.status(200).json(logsData);

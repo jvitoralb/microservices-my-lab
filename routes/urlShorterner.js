@@ -2,7 +2,7 @@ import { Router } from 'express';
 import dns from 'node:dns';
 import __dirname from '../config.js';
 import Shortener from '../models/Shortener.js';
-import { createSave, findMainURL, findShortURL } from '../shortener.js';
+import short from '../controllers/shortener.js';
 
 const shortener = Router();
 
@@ -39,7 +39,7 @@ shortener.post('/api/shorturl', (req, res, next) => {
         next();
     });
 }, (req, res, next) => {
-    createSave(req.body.url, (err, savedData) => {
+    short.createSave(req.body.url, (err, savedData) => {
         if (err) {
             return err.code === 11000 ? next() : next(err);
         }
@@ -52,7 +52,7 @@ shortener.post('/api/shorturl', (req, res, next) => {
         });
     });
 }, (req, res, next) => {
-    findMainURL(req.body.url, (err, short) => {
+    short.findMainURL(req.body.url, (err, short) => {
         if (err) return next(err);
         res.json({
             original_url: short[0].mainUrl,
@@ -65,7 +65,7 @@ shortener.get('/api/shorturl/:shortID', (req, res, next) => {
     if (!Number(req.params.shortID)) {
         return res.json({ error: 'must be a number' });
     }
-    findShortURL(req.params.shortID, (err, response) => {
+    short.findShortURL(req.params.shortID, (err, response) => {
         if (err) return next(err);
         res.redirect(response[0].mainUrl);
     });
