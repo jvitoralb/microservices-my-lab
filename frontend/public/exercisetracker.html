@@ -15,13 +15,14 @@
         <h2>Exercise Tracker Microservice</h2>
     </header>
     <main id="main" class="tracker-main">
-        <h4>
+        <h3>
             <a href="/">Home</a>
-        </h4>
+        </h3>
         <section id="create-user-section">
+            <h3>User</h3>
             <form id="user-form" action="/exercise-tracker/api/users" method="post" class="create-user">
                 <h4>Create User</h4>
-                <label for="username">Username:</label>
+                <label for="username">Username</label>
                 <input id="username-input" name="username" type="text" placeholder="Username" required />
                 <button id="submit-user">Submit</button>
             </form>
@@ -32,24 +33,25 @@
                         "username": "harpyja",
                         "_id": "63012a9c8541ec94d7ab1e54"
                     }</code>
-                <p>To get a list with a list with all users:</p>
+                <p>To get all users go to:</p>
                 <a href="/exercise-tracker/api/users" target="_blank" class="get-users">
-                    Get All Users
+                    this.app.com/api/users
                 </a>
             </section>
         </section>
 
         <section id="create-exercise-section">
+            <h3>Exercise</h3>
             <form id="exercise-form" method="post" class="create-exercise">
-                <h4>Create Exercise</h4>
-                <label for="user-id">User ID:</label>
+                <h4>Log Exercise</h4>
+                <label for="user-id">User ID</label>
                 <input id="user-id" name="_id" type="text" placeholder="_id" required />
-                <label for="exercise-description">Description:</label>
+                <label for="exercise-description">Description</label>
                 <input id="exercise-description" name="description" type="text"
                     placeholder="Exercise description" required />
-                <label for="exercise-duration">Duration:</label>
+                <label for="exercise-duration">Duration</label>
                 <input id="exercise-duration" name="duration" type="number" placeholder="Minutes" required />
-                <label for="exercise-date">Date:</label>
+                <label for="exercise-date">Date</label>
                 <input id="exercise-date" name="date" type="text"  />
                 <button id="submit-exercise">Submit</button>
             </form>
@@ -66,10 +68,12 @@
             </section>
         </section>
         <section id="exercises-logs-section">
+            <h3>Logs</h3>
             <form id="logs-form" method="get" class="exercise-logs">
-                <h4>Logs</h4>
-                <label for="logs-id">User ID:</label>
-                <input id="logs-id" name="_id" type="text" placeholder="_id" required />
+                <h4>Get Logs</h4>
+                <label for="logs-id">User ID</label>
+                    <input id="logs-id" name="_id" type="text" placeholder="_id" required />
+                
                 <button id="submit-logs">Get Logs</button>
             </form>
             <section id="exercises-logs-usage" class="usage-sec">
@@ -92,7 +96,7 @@
                         /api/user/63012a9c8541ec94d7ab1e54/logs
                     </a>
                 </p>
-                <h4>Note</h4>
+                <h4>Notes</h4>
                 <p>You can also set a 
                     <span class="italic-text">limit</span>, 
                     <span class="italic-text">from</span> and 

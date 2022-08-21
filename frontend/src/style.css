@@ -113,16 +113,25 @@ main > * {
  *  Exercise Tracker
 */
 .tracker-main > section {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+    "title title"
+    "form usage";
+}
+
+section > h3 {
+    text-align: center;
+    grid-area: title;
 }
 
 .create-user, .create-exercise, .exercise-logs {
-    text-align: center;
     padding: 16px;
     display: flex;
     align-items: center;
     flex-direction: column;
+    grid-area: form;
 }
 
 @media (max-width: 660px) {
@@ -132,21 +141,13 @@ main > * {
     }
 }
 
-form > input {
-    margin-bottom: 8px;
-}
-
-.exercise-tracker {
-    display: flex;
-}
-
 .usage-sec {
-    padding: 0 16px;
+    padding: 16px;
     min-height: 187px;
-    text-align: center;
     display: flex;
     align-items: center;
     flex-direction: column;
+    grid-area: usage;
 }
 
 .usage-sec > p {
