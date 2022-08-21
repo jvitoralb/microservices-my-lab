@@ -1,4 +1,4 @@
-import { userExists } from '../exercise.js';
+import { userExists } from '../controllers/exercise.js';
 
 const exerciseBody = (req, res, next) => {
     const { params, body } = req;
