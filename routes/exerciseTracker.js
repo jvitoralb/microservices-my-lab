@@ -3,7 +3,7 @@ import __dirname from '../config.js';
 import tracker from '../controllers/exercise.js';
 import exerciseBody from '../middleware/exercise.js';
 import Exercise from '../models/userExercise.js';
-import User from '../models/User.js';
+// import User from '../models/User.js';
 
 
 const exercise = Router();
