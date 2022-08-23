@@ -1,42 +1,43 @@
 import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Exercise from '../models/userExercise.js';
+import { convertDate } from '../utils/exerciseUtils.js';
 
 
-export const convertDate = (date) => {
-    const [year, month, day] = date.split('-');
-    let dateString = new Date(year, month - 1, day );
-    return dateString.toDateString();
-}
-
-export const createUser = async (name, res) => {
+export const createUser = async (req, res) => {
+    const { username } = req.body;
     const newUser = new User({
-        username: name
+        username: username
     });
+
     try {
         const savedUser = await newUser.save();
-        return savedUser;
+        res.status(201).json({
+            username: savedUser.username,
+            _id: savedUser._id
+        });
     } catch(err) {
         console.log(err);
-        res.status(404).send(err.message)
+        res.status(404).send(err.message);
     }
 }
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (req, res) => {
     try {
         const allUsers = await User.find({})
         .select('_id username');
-        return allUsers;
+        res.status(200).send(allUsers);
     } catch(err) {
         console.log(err);
     }
 }
 
-export const userExists = async (userID, res, next) => {
+export const userExists = async (req, res, next) => {
+    const { id } = req.params;
     try {
-        const result = await User.exists({ _id: userID});
+        const result = await User.exists({ _id: id});
         if (result === null) throw new Error('UserID does not exists');
-        next();
+        return next();
     } catch (err) {
         console.log(err);
         res.status(404).send(err.message);
@@ -63,55 +64,59 @@ const updateUser = async (user, update) => {
     }
 }
 
-export const createExercise = async (id, desc, dur, date) => {
+export const createExercise = async (req, res) => {
+    const { params, body } = req;
     const newExercise = new Exercise({
         _id: new mongoose.Types.ObjectId,
-        user: id,
-        description: desc,
-        duration: dur,
-        date: date
+        user: params.id,
+        description: body.description,
+        duration: body.duration,
+        date: body.date
     });
 
     try {
         const savedExercise = await newExercise.save();
         const { _id, username, description, duration } = await updateUser(savedExercise.user._id, {
-            set: {
-                description: desc,
-                duration: dur
-            },
-            push: { log: savedExercise._id }
-        });
+                set: {
+                    description: body.description,
+                    duration: body.duration
+                },
+                push: { log: savedExercise._id }
+            }
+        );
 
-        return {
+        res.status(201).json({
             _id,
             username,
             description,
             duration,
-            date: convertDate(date)
-        };
+            date: convertDate(body.date)
+        });
     } catch(err) {
         console.log(err);
     }
 }
 
-export const getUserLogs = async (userID, limit, from, to) => {
+export const getUserLogs = async (req, res) => {
     // from and to just works if both exist
+    const { params, query } = req;
     const matchConfig = {
         date: {
-            $gt: from,
-            $lt: to
+            $gte: query.from,
+            $lte: query.to
         }
     }
     try {
-        const countDocs = await Exercise.countDocuments({user: userID});
-        const { id, username, log } = await User.findById(userID)
+        const countDocs = await Exercise.countDocuments({user: params.id});
+        const { id, username, log } = await User.findById(params.id)
         .populate({
             path:'log',
             select: '-_id -user -__v',
-            match: from && to ? matchConfig : null,
-            perDocumentLimit: limit || null
+            match: query.from && query.to ? matchConfig : null,
+            perDocumentLimit: query.limit || null
         });
-        return {
+
+        res.status(200).json({
             username,
             count: countDocs,
             id,
@@ -120,7 +125,7 @@ export const getUserLogs = async (userID, limit, from, to) => {
                 duration: obj.duration,
                 date: convertDate(obj.date)
             }))
-        };
+        });
     } catch(err) {
         console.log(err)
     }

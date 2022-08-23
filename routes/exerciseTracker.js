@@ -1,4 +1,4 @@
-import { Router } from 'express';   
+import { Router } from 'express';
 import __dirname from '../config.js';
 import tracker from '../controllers/exercise.js';
 import exerciseBody from '../middleware/exercise.js';
@@ -12,25 +12,16 @@ exercise.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/exercisetracker.html`);
 });
 
-exercise.get('/api/users', async (req, res) => {
-    const usersData = await tracker.getAllUsers();
-    res.status(200).send(usersData);
+exercise.get('/api/users', (req, res) => {
+    tracker.getAllUsers(req, res);
 });
 
-exercise.post('/api/users', async (req, res) => {
-    const { username } = req.body;
-    const savedData = await tracker.createUser(username, res);
-    res.status(201).json({
-        username: savedData.username,
-        _id: savedData._id
-    });
+exercise.post('/api/users', (req, res) => {
+    tracker.createUser(req, res);
 });
 
-exercise.post('/api/users/:id/exercises', exerciseBody, async (req, res) => {
-    const { id } = req.params;
-    const { description, duration, date } = req.body;
-    const userExerciseData = await tracker.createExercise(id, description, duration, date);
-    res.status(201).json(userExerciseData);
+exercise.post('/api/users/:id/exercises', exerciseBody, (req, res) => {
+    tracker.createExercise(req, res);
 });
 
 exercise.delete('/api/del/all', async (req, res) => {
@@ -41,13 +32,10 @@ exercise.delete('/api/del/all', async (req, res) => {
     res.send([deletedUsers, deletedExercise]);
 });
 
-exercise.get('/api/users/:id/logs', async (req, res) => {
-    /**
-     *  Need to check if user exists
-    **/
-    const { params, query } = req;
-    const logsData = await tracker.getUserLogs(params.id, query.limit, query.from, query.to);
-    res.status(200).json(logsData);
+exercise.get('/api/users/:id/logs', (req, res, next) => {
+    tracker.userExists(req, res, next);
+}, (req, res) => {
+    tracker.getUserLogs(req, res);
 });
 
 export default exercise;
