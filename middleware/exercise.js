@@ -1,5 +1,6 @@
 import { userExists } from '../controllers/exercise.js';
 
+
 const exerciseBody = (req, res, next) => {
     const { params, body } = req;
     const reqDate = new Date(body.date);
@@ -9,9 +10,10 @@ const exerciseBody = (req, res, next) => {
     }
 
     if (reqDate == 'Invalid Date') {
-        req.body.date = new Date().toISOString().slice(0, 10);
+        // req.body.date = new Date().toISOString().slice(0, 10);
+        req.body.date = new Date().toLocaleDateString('en-CA');
     }
-    return userExists(params.id, res, next);
+    return userExists(req, res, next);
 }
 
 export default exerciseBody;
