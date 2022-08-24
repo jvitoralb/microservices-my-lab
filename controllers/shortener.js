@@ -1,11 +1,6 @@
 import Shortener from '../models/Shortener.js';
+import shortCode from '../utils/shortenerUtils.js';
 
-
-const shortCode = () => {
-    let str = (Math.random() * performance.now()).toString(36).substring(4, 7);
-    let ing = (Math.random() * performance.now()).toString(36).substring(4, 7);
-    return `${str}${ing}`;
-}
 
 export const createSave = async (req, res, next) => {
     
@@ -29,7 +24,7 @@ export const findMainURL = async (req, res, next) => {
     try {
         const dataFound = await Shortener.find({mainUrl: req.body.url});
         if (!dataFound.length) {
-            console.log(`URL ${req.body.url} not found`)
+            console.log(`URL ${req.body.url} not found`);
             return next();
         }
         res.json({
