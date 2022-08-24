@@ -41,7 +41,9 @@ export const toMainURL = async (req, res, next) => {
 
     try {
         const shortURL = await Shortener.find({shortUrlCode: shortID});
-        res.redirect(shortURL[0].mainUrl);
+        console.log(shortURL)
+        console.log(shortURL[0].mainUrl)
+        res.redirect(`https://${shortURL[0].mainUrl}`);
     } catch(err) {
         console.log(err);
         next(err);
