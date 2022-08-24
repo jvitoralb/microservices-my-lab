@@ -37,12 +37,12 @@ export const validHostname = (req, res, next) => {
             return res.json({ error: 'invalid url' });
         };
         console.log('après error dns to res.json')
-        return res.json({
-            final: true,
-            tocheck: hostToCheck,
-            reqbodyurl: req.body.url
-        });
-        // return next();
+        // return res.json({
+        //     final: true,
+        //     tocheck: hostToCheck,
+        //     reqbodyurl: req.body.url
+        // });
+        return next();
     });
 }
 //     const hostRegExp = /[www.]*(\w+|[-\w-]*[.\w]*)[.]\w+/g;
