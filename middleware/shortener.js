@@ -4,20 +4,19 @@ import { findMainURL } from '../controllers/shortener.js';
 
 export const validHostname = (req, res, next) => {
     const hostRegExp = /[www.]*(\w+|[-\w-]*[.\w]*)[.]\w+/g;
-    // const regExp = /(h|f)[tps]+/g;
+    const regExp = /(h|f)[tps]+/g;
     let hostToCheck = req.body.url;
 
     if (!req.body.url) {
         return res.json({ error: 'invalid url' });
     }
 
-    // if (!req.body.url.match(regExp)) {
-    //     req.body.url = `https://${req.body.url}`;
-    // }
+    if (!req.body.url.match(regExp)) {
+        req.body.url = `https://${req.body.url}`;
+    }
 
     if (hostToCheck.match(hostRegExp)) {
         hostToCheck = hostToCheck.match(hostRegExp).join('');
-        req.body.url = hostToCheck;
     }
 
     dns.lookup(hostToCheck, (err) => {
