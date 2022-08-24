@@ -9,7 +9,7 @@ const shortenerSchema = new Schema({
         unique: true
     },
     shortUrlCode: {
-        type: Number,
+        type: String,
         required: true,
         unique: true
     }

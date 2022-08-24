@@ -1,62 +1,62 @@
 import Shortener from '../models/Shortener.js';
 
 
-export const createSave = (req, res, next) => {
-    const num = parseInt(performance.now() * Math.random());
+const shortCode = () => {
+    let str = (Math.random() * performance.now()).toString(36).substring(4, 7);
+    let ing = (Math.random() * performance.now()).toString(36).substring(4, 7);
+    return `${str}${ing}`;
+}
 
+export const createSave = async (req, res, next) => {
+    
     const newShortURL = new Shortener({
         mainUrl: req.body.url,
-        shortUrlCode: num
+        shortUrlCode: shortCode()
     });
 
-    newShortURL.save((err, savedURLData) => {
-        if (err) {
-            if (err.code === 11000) {
-                return Shortener.find({mainUrl: req.body.url}, (err, result) => {
-                    if (err) {
-                        return console.log('err', err);
-                    }
-                    res.json({
-                        original_url: `https://${result[0].mainUrl}`,
-                        short_url: result[0].shortUrlCode
-                    });
-                });
-            }
-            return next(err);
-        }
-        console.log("res", {
-            original_url: savedURLData.mainUrl,
-            short_url: savedURLData.shortUrlCode
-        })
+    try {
+        const savedShort = await newShortURL.save();
         res.json({
-            original_url: `https://${savedURLData.mainUrl}`,
-            short_url: savedURLData.shortUrlCode
+            original_url: savedShort.mainUrl,
+            short_url: savedShort.shortUrlCode
         });
-    });
+    } catch(err) {
+        next(err);
+    }
 }
 
-export const findMainURL = (url, done) => {
-    Shortener.find({mainUrl: url}, (err, result) => {
-        return (!err && !result.length) ? done(true) : done(null, result);
-    });
-}
-
-export const findShortURL = (req, res, next) => {
-    const { shortID } = req.params;
-
-    Shortener.find({shortUrlCode: shortID}, (err, result) => {
-        if (err) {
-            res.json({ error: 'invalid shortID' })
+export const findMainURL = async (req, res, next) => {
+    try {
+        const dataFound = await Shortener.find({mainUrl: req.body.url});
+        if (!dataFound.length) {
+            console.log(`URL ${req.body.url} not found`)
             return next();
         }
-        res.redirect(`https://${result[0].mainUrl}`);
-    });
+        res.json({
+            original_url: dataFound[0].mainUrl,
+            short_url: dataFound[0].shortUrlCode
+        });
+    } catch(err) {
+        next(err);
+    }
+}
+
+export const toMainURL = async (req, res, next) => {
+    const { shortID } = req.params;
+
+    try {
+        const shortURL = await Shortener.find({shortUrlCode: shortID});
+        res.redirect(shortURL[0].mainUrl);
+    } catch(err) {
+        console.log(err);
+        next(err);
+    }
 }
 
 const short = {
     createSave,
     findMainURL,
-    findShortURL
+    toMainURL
 }
 
 export default short;
