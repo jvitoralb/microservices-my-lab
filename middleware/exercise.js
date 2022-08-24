@@ -10,10 +10,6 @@ const exerciseBody = (req, res, next) => {
     }
 
     if (reqDate == 'Invalid Date') {
-        /**
-         * Still need to see this
-         */
-        // req.body.date = new Date().toISOString().slice(0, 10);
         req.body.date = new Date().toLocaleDateString('en-CA');
     }
     return userExists(req, res, next);
