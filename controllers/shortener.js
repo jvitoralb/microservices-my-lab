@@ -1,15 +1,33 @@
 import Shortener from '../models/Shortener.js';
 
-export const createSave = (url, done) => {
+
+export const createSave = (req, res, next) => {
     const num = parseInt(performance.now() * Math.random());
 
     const newShortURL = new Shortener({
-        mainUrl: url,
+        mainUrl: req.body.url,
         shortUrlCode: num
     });
 
     newShortURL.save((err, savedURLData) => {
-        return err ? done(err) : done(null, savedURLData);
+        if (err) {
+            if (err.code === 11000) {
+                return Shortener.find({mainUrl: req.body.url}, (err, result) => {
+                    if (err) {
+                        return console.log('err', err);
+                    }
+                    res.json({
+                        original_url: `https://${result[0].mainUrl}`,
+                        short_url: result[0].shortUrlCode
+                    });
+                });
+            }
+            return next(err);
+        }
+        res.json({
+            original_url: `https://${savedURLData.mainUrl}`,
+            short_url: savedURLData.shortUrlCode
+        });
     });
 }
 
@@ -19,9 +37,15 @@ export const findMainURL = (url, done) => {
     });
 }
 
-export const findShortURL = (shortURL, done) => {
-    Shortener.find({shortUrlCode: shortURL}, (err, result) => {
-        return err ? done(err) : done(null, result);
+export const findShortURL = (req, res, next) => {
+    const { shortID } = req.params;
+
+    Shortener.find({shortUrlCode: shortID}, (err, result) => {
+        if (err) {
+            res.json({ error: 'invalid shortID' })
+            return next();
+        }
+        res.redirect(`https://${result[0].mainUrl}`);
     });
 }
 
