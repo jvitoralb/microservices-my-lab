@@ -25,7 +25,8 @@ export const createSave = (req, res, next) => {
             return next(err);
         }
         res.json({
-            original_url: `https://${savedURLData.mainUrl}`,
+            original_url: savedURLData.mainUrl,
+            // original_url: `https://${savedURLData.mainUrl}`,
             short_url: savedURLData.shortUrlCode
         });
     });
