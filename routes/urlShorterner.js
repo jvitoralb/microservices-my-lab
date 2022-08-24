@@ -10,7 +10,6 @@ shortener.get('/', (req, res) => {
 });
 
 shortener.post('/api/shorturl', validHostname, (req, res, next) => {
-    console.log("posting", req.body)
     short.createSave(req, res, next);
 });
 
