@@ -5,7 +5,7 @@ export const createSave = (req, res, next) => {
     const num = parseInt(performance.now() * Math.random());
 
     const newShortURL = new Shortener({
-        mainUrl: req.body.url,
+        mainUrl: `https://${req.body.url}`,
         shortUrlCode: num
     });
 
@@ -17,13 +17,18 @@ export const createSave = (req, res, next) => {
                         return console.log('err', err);
                     }
                     res.json({
-                        original_url: `https://${result[0].mainUrl}`,
+                        original_url: result[0].mainUrl,
+                        // original_url: `https://${result[0].mainUrl}`,
                         short_url: result[0].shortUrlCode
                     });
                 });
             }
             return next(err);
         }
+        console.log("res", {
+            original_url: savedURLData.mainUrl,
+            short_url: savedURLData.shortUrlCode
+        })
         res.json({
             original_url: savedURLData.mainUrl,
             // original_url: `https://${savedURLData.mainUrl}`,
