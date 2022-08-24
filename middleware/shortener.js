@@ -28,7 +28,7 @@ export const validHostname = (req, res, next) => {
     if (hostToCheck.match(hostRegExp)) {
         console.log('hostToCheck.match(hostRegExp)')
         hostToCheck = hostToCheck.match(hostRegExp).join('');
-        // req.body.url = hostToCheck.match(hostRegExp).join('');
+        req.body.url = hostToCheck;
     }
 
     dns.lookup(hostToCheck, (err) => {
