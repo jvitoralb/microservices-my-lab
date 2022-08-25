@@ -7,6 +7,7 @@ import timestamp from './routes/timestamp.js';
 import headerParser from './routes/headerParser.js';
 import shorterner from './routes/urlShorterner.js';
 import exercise from './routes/exerciseTracker.js';
+import fileMetadata from './routes/fileMetadata.js';
 
 dotenv.config();
 
@@ -44,6 +45,11 @@ app.use('/url-shortener', shorterner);
  *  Exercise Router
 **/
 app.use('/exercise-tracker', exercise);
+
+/**
+ *  File Metadata
+**/
+app.use('/file-metadata', fileMetadata);
 
 /**
  *  Need to separate app and server 
