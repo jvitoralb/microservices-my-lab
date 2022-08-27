@@ -12,17 +12,30 @@
 
 <body id="body">
     <header id="header">
-        <h2>URL Shortener Microservice</h2>
+        <h2>File Metadata Microservice</h2>
     </header>
     <main id="main">
         <h4>
             <a href="/">Home</a>
         </h4>
-        <h4>Hello File Metadata</h4>
-        <form action="/file-metadata/api/fileanalyse" method="post" enctype="multipart/form-data">
-            <input type="file" name="upfile" />
-            <button>Upload</button>
+        <h4>Usage</h4>
+        <p>
+            Upload a file through the following form, then expect to see a JSON object with some file metadata.
+        </p>
+        <form id="upload-form" action="/file-metadata/api/fileanalyse" method="post" enctype="multipart/form-data"
+            class="upload-file">
+            <h4>Upload a File</h4>
+            <input id="file-input" type="file" name="upfile" class="upload-input" />
+            <button id="submit-btn">Upload</button>
         </form>
+        <h4>Expected Output</h4>
+        <code>
+            {
+                "name": "Hello World.docx",<br/>
+                "type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "size": 146
+            }
+        </code>
         <p class="credit">by jvitoralb</p>
     </main>
 </body>
