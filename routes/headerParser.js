@@ -4,7 +4,7 @@ import __dirname from '../config.js';
 const headerParser = Router();
 
 headerParser.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/frontend/public/reqheader.html`);
+    res.sendFile(`${__dirname}/frontend/public/headerparser.html`);
 });
 
 headerParser.get('/api/whoami', (req, res) => {
