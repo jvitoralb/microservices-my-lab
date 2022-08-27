@@ -27,39 +27,12 @@ app.get('/', (req, res) => {
 });
 
 /**
- *  Timestamp API project
+ *  API project routes
 **/
 app.use('/timestamp', timestamp);
-
-/**
- *  Request header parser API project
-**/
 app.use('/req-header-parser', headerParser);
-
-/**
- *  URL Shortener
-**/
 app.use('/url-shortener', shorterner);
-
-/**
- *  Exercise Router
-**/
 app.use('/exercise-tracker', exercise);
-
-/**
- *  File Metadata
-**/
 app.use('/file-metadata', fileMetadata);
-
-/**
- *  Need to separate app and server 
-**/
-
-
-// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
-// const listener = app.listen(PORT, () => {
-//     console.log(`Server has started on port ${listener.address().port}`);
-// });
 
 export default app;
