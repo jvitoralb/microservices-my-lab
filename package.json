@@ -1,14 +1,15 @@
 {
-  "name": "microservices-apis",
+  "name": "microservices-apis-app",
   "version": "1.0.0",
   "description": "Project to practice back end development and APIs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node server.js"
   },
   "keywords": [
-    "node",
+    "nodejs",
     "express",
+    "mongoDB",
     "heroku",
     "microservices",
     "freeCodeCamp"

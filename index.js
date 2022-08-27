@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
-import * as dotenv from 'dotenv';
+// import mongoose from 'mongoose';
+// import * as dotenv from 'dotenv';
 import __dirname from './config.js';
 import timestamp from './routes/timestamp.js';
 import headerParser from './routes/headerParser.js';
@@ -9,9 +9,9 @@ import shorterner from './routes/urlShorterner.js';
 import exercise from './routes/exerciseTracker.js';
 import fileMetadata from './routes/fileMetadata.js';
 
-dotenv.config();
+// dotenv.config();
 
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
@@ -56,8 +56,10 @@ app.use('/file-metadata', fileMetadata);
 **/
 
 
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
-const listener = app.listen(PORT, () => {
-    console.log(`Server has started on port ${listener.address().port}`);
-});
+// const listener = app.listen(PORT, () => {
+//     console.log(`Server has started on port ${listener.address().port}`);
+// });
+
+export default app;
