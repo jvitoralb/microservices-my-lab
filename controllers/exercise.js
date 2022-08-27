@@ -18,7 +18,7 @@ export const createUser = async (req, res) => {
         });
     } catch(err) {
         console.log(err);
-        res.status(404).send(err.message);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -29,6 +29,7 @@ export const getAllUsers = async (req, res) => {
         res.status(200).send(allUsers);
     } catch(err) {
         console.log(err);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -36,11 +37,11 @@ export const userExists = async (req, res, next) => {
     const { id } = req.params;
     try {
         const result = await User.exists({ _id: id});
-        if (result === null) throw new Error('UserID does not exists');
+        if (!result) return res.status(404).send(`No user with ID: ${id}`);
         return next();
     } catch (err) {
         console.log(err);
-        res.status(404).send(err.message);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -61,6 +62,7 @@ const updateUser = async (user, update) => {
         return userUpdate;
     } catch(err) {
         console.log(err);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -76,6 +78,7 @@ export const createExercise = async (req, res) => {
 
     try {
         const savedExercise = await newExercise.save();
+        // Need to Update user, otherwise tests will fail
         const { _id, username, description, duration } = await updateUser(savedExercise.user._id, {
                 set: {
                     description: body.description,
@@ -94,6 +97,7 @@ export const createExercise = async (req, res) => {
         });
     } catch(err) {
         console.log(err);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -127,7 +131,8 @@ export const getUserLogs = async (req, res) => {
             }))
         });
     } catch(err) {
-        console.log(err)
+        console.log(err);
+        res.status(500).json({msg:err});
     }
 }
 

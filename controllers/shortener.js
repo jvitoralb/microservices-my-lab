@@ -11,12 +11,12 @@ export const createSave = async (req, res, next) => {
 
     try {
         const savedShort = await newShortURL.save();
-        res.json({
+        res.status(201).json({
             original_url: savedShort.mainUrl,
             short_url: savedShort.shortUrlCode
         });
     } catch(err) {
-        next(err);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -27,12 +27,12 @@ export const findMainURL = async (req, res, next) => {
             console.log(`URL ${req.body.url} not found`);
             return next();
         }
-        res.json({
+        res.status(200).json({
             original_url: dataFound[0].mainUrl,
             short_url: dataFound[0].shortUrlCode
         });
     } catch(err) {
-        next(err);
+        res.status(500).json({msg:err});
     }
 }
 
@@ -41,10 +41,10 @@ export const toMainURL = async (req, res, next) => {
 
     try {
         const shortURL = await Shortener.find({shortUrlCode: shortID});
-        res.redirect(shortURL[0].mainUrl);
+        res.status(301).redirect(shortURL[0].mainUrl);
     } catch(err) {
         console.log(err);
-        next(err);
+        res.status(500).json({msg:err});
     }
 }
 
