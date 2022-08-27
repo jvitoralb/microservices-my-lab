@@ -12,11 +12,9 @@ exercise.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/exercisetracker.html`);
 });
 
-exercise.get('/api/users', (req, res) => {
+exercise.route('/api/users').get((req, res) => {
     tracker.getAllUsers(req, res);
-});
-
-exercise.post('/api/users', (req, res) => {
+}).post((req, res) => {
     tracker.createUser(req, res);
 });
 
