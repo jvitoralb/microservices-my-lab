@@ -1,5 +1,5 @@
 import http from 'http';
-import app from './index.js';
+import app from './app.js';
 import mongoose from 'mongoose';
 import * as dotenv from 'dotenv';
 import { normalize } from 'path';
