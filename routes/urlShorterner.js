@@ -3,6 +3,7 @@ import __dirname from '../config.js';
 import short from '../controllers/shortener.js';
 import validHostname from '../middleware/shortener.js';
 
+
 const shortener = Router();
 
 shortener.get('/', (req, res) => {

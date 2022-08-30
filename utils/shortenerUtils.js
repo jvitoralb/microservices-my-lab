@@ -1,6 +1,10 @@
 const shortCode = () => {
-    let str = (Math.random() * performance.now()).toString(36).substring(4, 7);
-    let ing = (Math.random() * performance.now()).toString(36).substring(4, 7);
+    const randomStr = () => {
+        return (Math.random() * performance.now()).toString(36).replace('.', '').substring(0, 3);
+    }
+
+    let str = randomStr();
+    let ing = randomStr();
     return `${str}${ing}`;
 }
 

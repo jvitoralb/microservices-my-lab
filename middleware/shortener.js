@@ -1,6 +1,6 @@
 import dns from 'node:dns';
-import { findMainURL } from '../controllers/shortener.js';
 import CustomError from '../errors/custom.js';
+import { findMainURL } from '../controllers/shortener.js';
 
 
 export const validHostname = (req, res, next) => {
