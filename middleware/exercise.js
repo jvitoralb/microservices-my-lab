@@ -1,4 +1,5 @@
 import { userExists } from '../controllers/exercise.js';
+import CustomError from '../errors/custom.js';
 
 
 const exerciseBody = (req, res, next) => {
@@ -6,7 +7,7 @@ const exerciseBody = (req, res, next) => {
     const reqDate = new Date(body.date);
 
     if (!params.id || !body.description || !body.duration) {
-        return res.status(404).send('Something is missing!');
+        throw new CustomError('Something is missing!', 404);
     }
 
     if (reqDate == 'Invalid Date') {

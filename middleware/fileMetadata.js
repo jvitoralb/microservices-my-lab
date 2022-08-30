@@ -1,6 +1,9 @@
+import CustomError from '../errors/custom.js';
+
+
 const checkUpload = (req, res, next) => {
     if(!req.file) {
-        return res.status(404).send('Something is missing!');
+        throw new CustomError('Something is missing!', 404);
     }
     next();
 }

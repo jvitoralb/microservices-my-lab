@@ -1,5 +1,6 @@
 import dns from 'node:dns';
 import { findMainURL } from '../controllers/shortener.js';
+import CustomError from '../errors/custom.js';
 
 
 export const validHostname = (req, res, next) => {
@@ -8,7 +9,7 @@ export const validHostname = (req, res, next) => {
     let hostToCheck = req.body.url;
 
     if (!req.body.url) {
-        return res.json({ error: 'invalid url' });
+        throw new CustomError('Something is missing!', 404);
     }
 
     if (!req.body.url.match(regExp)) {
