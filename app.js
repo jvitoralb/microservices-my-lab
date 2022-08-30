@@ -6,6 +6,8 @@ import headerParser from './routes/headerParser.js';
 import shorterner from './routes/urlShorterner.js';
 import exercise from './routes/exerciseTracker.js';
 import fileMetadata from './routes/fileMetadata.js';
+import notFound from './middleware/notFound.js';
+import handleError from './middleware/error.js';
 
 
 const app = express();
@@ -30,5 +32,11 @@ app.use('/header-parser', headerParser);
 app.use('/url-shortener', shorterner);
 app.use('/exercise-tracker', exercise);
 app.use('/file-metadata', fileMetadata);
+
+/**
+ *  Middlewares
+**/
+app.use(notFound);
+app.use(handleError);
 
 export default app;
