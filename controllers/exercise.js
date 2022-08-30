@@ -1,51 +1,45 @@
 import mongoose from 'mongoose';
 import User from '../models/User.js';
 import Exercise from '../models/userExercise.js';
-import { convertDate } from '../utils/exerciseUtils.js';
+import convertDate from '../utils/exerciseUtils.js';
+import asyncWrap from '../middleware/async.js';
+import CustomError from '../errors/custom.js';
 
 
-export const createUser = async (req, res) => {
+export const createUser = asyncWrap(async (req, res, next) => {
     const { username } = req.body;
     const newUser = new User({
         username: username
     });
 
-    try {
-        const savedUser = await newUser.save();
-        res.status(201).json({
-            username: savedUser.username,
-            _id: savedUser._id
-        });
-    } catch(err) {
-        console.log(err);
-        res.status(500).json({msg:err});
-    }
-}
+    const savedUser = await newUser.save();
 
-export const getAllUsers = async (req, res) => {
-    try {
-        const allUsers = await User.find({})
-        .select('_id username');
-        res.status(200).send(allUsers);
-    } catch(err) {
-        console.log(err);
-        res.status(500).json({msg:err});
-    }
-}
+    res.status(201).json({
+        username: savedUser.username,
+        _id: savedUser._id
+    });
+});
 
-export const userExists = async (req, res, next) => {
+export const getAllUsers = asyncWrap(async (req, res, next) => {
+    const allUsers = await User.find({})
+    .select('_id username');
+
+    res.status(200).send(allUsers);
+});
+
+export const userExists = asyncWrap(async (req, res, next) => {
     const { id } = req.params;
-    try {
-        const result = await User.exists({ _id: id});
-        if (!result) return res.status(404).send(`No user with ID: ${id}`);
-        return next();
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({msg:err});
-    }
-}
+    const result = await User.exists({ _id: id});
 
-const updateUser = async (user, update) => {
+    if (!result) {
+        const err = new CustomError(`No user with ID: ${id}`, 404);
+        return next(err);
+    }
+
+    return next();
+});
+
+const updateUser = async (user, update, next) => {
     let options = {
         new: true
     }
@@ -62,11 +56,11 @@ const updateUser = async (user, update) => {
         return userUpdate;
     } catch(err) {
         console.log(err);
-        res.status(500).json({msg:err});
+        next(err);
     }
 }
 
-export const createExercise = async (req, res) => {
+export const createExercise = asyncWrap(async (req, res, next) => {
     const { params, body } = req;
     const newExercise = new Exercise({
         _id: new mongoose.Types.ObjectId,
@@ -76,32 +70,27 @@ export const createExercise = async (req, res) => {
         date: body.date
     });
 
-    try {
-        const savedExercise = await newExercise.save();
-        // Need to Update user, otherwise tests will fail
-        const { _id, username, description, duration } = await updateUser(savedExercise.user._id, {
-                set: {
-                    description: body.description,
-                    duration: body.duration
-                },
-                push: { log: savedExercise._id }
-            }
-        );
+    const savedExercise = await newExercise.save();
+    // Need to Update user, otherwise tests will fail
+    const { _id, username, description, duration } = await updateUser(savedExercise.user._id, {
+            set: {
+                description: body.description,
+                duration: body.duration
+            },
+            push: { log: savedExercise._id }
+        }, next
+    );
 
-        res.status(201).json({
-            _id,
-            username,
-            description,
-            duration,
-            date: convertDate(body.date)
-        });
-    } catch(err) {
-        console.log(err);
-        res.status(500).json({msg:err});
-    }
-}
+    res.status(201).json({
+        _id,
+        username,
+        description,
+        duration,
+        date: convertDate(body.date)
+    });
+});
 
-export const getUserLogs = async (req, res) => {
+export const getUserLogs = asyncWrap(async (req, res, next) => {
     // from and to just works if both exist
     const { params, query } = req;
     const matchConfig = {
@@ -110,31 +99,27 @@ export const getUserLogs = async (req, res) => {
             $lte: query.to
         }
     }
-    try {
-        const countDocs = await Exercise.countDocuments({user: params.id});
-        const { id, username, log } = await User.findById(params.id)
-        .populate({
-            path:'log',
-            select: '-_id -user -__v',
-            match: query.from && query.to ? matchConfig : null,
-            perDocumentLimit: query.limit || null
-        });
 
-        res.status(200).json({
-            username,
-            count: countDocs,
-            id,
-            log: log.map(obj => ({
-                description: obj.description,
-                duration: obj.duration,
-                date: convertDate(obj.date)
-            }))
-        });
-    } catch(err) {
-        console.log(err);
-        res.status(500).json({msg:err});
-    }
-}
+    const countDocs = await Exercise.countDocuments({user: params.id});
+    const { id, username, log } = await User.findById(params.id)
+    .populate({
+        path:'log',
+        select: '-_id -user -__v',
+        match: query.from && query.to ? matchConfig : null,
+        perDocumentLimit: query.limit || null
+    });
+
+    res.status(200).json({
+        username,
+        count: countDocs,
+        id,
+        log: log.map(obj => ({
+            description: obj.description,
+            duration: obj.duration,
+            date: convertDate(obj.date)
+        }))
+    });
+});
 
 const tracker = {
     createUser,

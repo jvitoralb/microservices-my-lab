@@ -12,14 +12,14 @@ exercise.get('/', (req, res) => {
     res.sendFile(`${__dirname}/frontend/public/exercisetracker.html`);
 });
 
-exercise.route('/api/users').get((req, res) => {
-    tracker.getAllUsers(req, res);
-}).post((req, res) => {
-    tracker.createUser(req, res);
+exercise.route('/api/users').get((req, res, next) => {
+    tracker.getAllUsers(req, res, next);
+}).post((req, res, next) => {
+    tracker.createUser(req, res, next);
 });
 
-exercise.post('/api/users/:id/exercises', exerciseBody, (req, res) => {
-    tracker.createExercise(req, res);
+exercise.post('/api/users/:id/exercises', exerciseBody, (req, res, next) => {
+    tracker.createExercise(req, res, next);
 });
 
 // exercise.delete('/api/del/all', async (req, res) => {
@@ -32,8 +32,8 @@ exercise.post('/api/users/:id/exercises', exerciseBody, (req, res) => {
 
 exercise.get('/api/users/:id/logs', (req, res, next) => {
     tracker.userExists(req, res, next);
-}, (req, res) => {
-    tracker.getUserLogs(req, res);
+}, (req, res, next) => {
+    tracker.getUserLogs(req, res, next);
 });
 
 export default exercise;
