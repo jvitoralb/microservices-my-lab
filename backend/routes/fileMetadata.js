@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import multer from 'multer';
-import _dirname from '../config.js';
+import frontend from '../config.js';
 import checkUpload from '../middleware/fileMetadata.js';
 
 
@@ -8,7 +8,7 @@ const fileMetadata = Router();
 const upload = multer({ dest: 'uploads/' });
 
 fileMetadata.get('/', (req, res) => {
-    res.sendFile(`${_dirname}/frontend/public/filemetadata.html`);
+    res.sendFile(`${frontend}/public/filemetadata.html`);
 });
 
 fileMetadata.use('/api/fileanalyse', upload.single('upfile'));

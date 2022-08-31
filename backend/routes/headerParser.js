@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import __dirname from '../config.js';
+import frontend from '../config.js';
 
 const headerParser = Router();
 
 headerParser.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/frontend/public/headerparser.html`);
+    res.sendFile(`${frontend}/public/headerparser.html`);
 });
 
 headerParser.get('/api/whoami', (req, res) => {

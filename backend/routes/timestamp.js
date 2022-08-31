@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import __dirname from '../config.js';
+import frontend from '../config.js';
 
 const timestamp = Router();
 
 timestamp.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/frontend/public/timestamp.html`);
+    res.sendFile(`${frontend}/public/timestamp.html`);
 });
 
 timestamp.get('/api/', (req, res) => {

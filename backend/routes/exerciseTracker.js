@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import __dirname from '../config.js';
+import frontend from '../config.js';
 import tracker from '../controllers/exercise.js';
 import exerciseBody from '../middleware/exercise.js';
 // import Exercise from '../models/userExercise.js';
@@ -9,7 +9,7 @@ import exerciseBody from '../middleware/exercise.js';
 const exercise = Router();
 
 exercise.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/frontend/public/exercisetracker.html`);
+    res.sendFile(`${frontend}/public/exercisetracker.html`);
 });
 
 exercise.route('/api/users').get((req, res, next) => {

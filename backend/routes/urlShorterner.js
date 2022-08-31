@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import __dirname from '../config.js';
+import frontend from '../config.js';
 import short from '../controllers/shortener.js';
 import validHostname from '../middleware/shortener.js';
 
@@ -7,7 +7,7 @@ import validHostname from '../middleware/shortener.js';
 const shortener = Router();
 
 shortener.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/frontend/public/urlshortener.html`);
+    res.sendFile(`${frontend}/public/urlshortener.html`);
 });
 
 shortener.post('/api/shorturl', validHostname, (req, res, next) => {
