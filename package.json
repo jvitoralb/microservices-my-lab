@@ -5,6 +5,6 @@
   "scripts": {
     "start": "npm start --prefix backend",
     "install-backend": "cd backend && npm install && cd ..",
-    "heroku-postbuild": "npm run install-backend "
+    "heroku-postbuild": "npm run install-backend"
   }
 }
