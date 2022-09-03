@@ -9,7 +9,7 @@ import CustomError from '../errors/custom.js';
 export const createUser = asyncWrap(async (req, res, next) => {
     const { username } = req.body;
     const newUser = new User({
-        username: username
+        username: username.trim()
     });
 
     const savedUser = await newUser.save();
