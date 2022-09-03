@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import frontend, { __dirname } from './config.js';
+import frontend from './config.js';
 import timestamp from './routes/timestamp.js';
 import headerParser from './routes/headerParser.js';
 import shorterner from './routes/urlShorterner.js';

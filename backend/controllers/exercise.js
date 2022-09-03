@@ -91,7 +91,6 @@ export const createExercise = asyncWrap(async (req, res, next) => {
 });
 
 export const getUserLogs = asyncWrap(async (req, res, next) => {
-    // from and to just works if both exist
     const { params, query } = req;
     const matchConfig = {
         date: {

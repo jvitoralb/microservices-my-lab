@@ -2,8 +2,6 @@ import { Router } from 'express';
 import frontend from '../config.js';
 import tracker from '../controllers/exercise.js';
 import exerciseBody from '../middleware/exercise.js';
-// import Exercise from '../models/userExercise.js';
-// import User from '../models/User.js';
 
 
 const exercise = Router();
@@ -21,14 +19,6 @@ exercise.route('/api/users').get((req, res, next) => {
 exercise.post('/api/users/:id/exercises', exerciseBody, (req, res, next) => {
     tracker.createExercise(req, res, next);
 });
-
-// exercise.delete('/api/del/all', async (req, res) => {
-//     // Uso só quando necessário, pro desenvolvimento~
-//     const deletedUsers = await User.deleteMany({});
-//     const deletedExercise = await Exercise.deleteMany({});
-//     console.log(deletedUsers, deletedExercise);
-//     res.send([deletedUsers, deletedExercise]);
-// });
 
 exercise.get('/api/users/:id/logs', (req, res, next) => {
     tracker.userExists(req, res, next);
