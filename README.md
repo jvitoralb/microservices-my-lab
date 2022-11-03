@@ -10,9 +10,9 @@ These are the 5 projects:
 - [File Metadata](https://github.com/jvitoralb/microservices-apis-app/blob/main/backend/routes/fileMetadata.js)
 
 ### [Back end](https://github.com/jvitoralb/microservices-apis-app/tree/main/backend)  
-To build the back end it was used Nodejs and Express. MongoDB and Mongoose for the database. And the app is hosted on the Heroku platform.
+To build the back end it was used Nodejs and Express. MongoDB and Mongoose for the database.
 
 ### [Front end](https://github.com/jvitoralb/microservices-apis-app/tree/main/frontend)  
 The main goal was to practice Back End Development and APIs. So the front end is pretty basic, done only with HTML and CSS.
 
-[Live Project](https://immense-eyrie-58582.herokuapp.com/)!
+[Live Project](https://micro-service-app.onrender.com/)!
