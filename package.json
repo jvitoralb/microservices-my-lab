@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "",
   "scripts": {
-    "start": "npm start --prefix backend"
+    "start": "npm start --prefix backend",
+    "build-backend": "cd backend && npm install && cd .."
   }
 }
