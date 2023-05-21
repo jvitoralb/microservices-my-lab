@@ -38,4 +38,4 @@ timestamp.get('/api/:date?', (req, res) => {
     });
 });
 
-export default timestamp;
+// export default timestamp;

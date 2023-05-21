@@ -26,4 +26,4 @@ exercise.get('/api/users/:id/logs', (req, res, next) => {
     tracker.getUserLogs(req, res, next);
 });
 
-export default exercise;
+// export default exercise;

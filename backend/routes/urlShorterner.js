@@ -18,4 +18,4 @@ shortener.get('/api/shorturl/:shortID', (req, res, next) => {
     short.toMainURL(req, res, next);
 });
 
-export default shortener;
+// export default shortener;
