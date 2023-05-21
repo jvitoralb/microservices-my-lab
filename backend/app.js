@@ -2,7 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import frontend from './config.js';
 import timestamp from './routes/timestamp.js';
-import headerParser from './routes/headerParser.js';
+import headerParserV2 from './components/parser/parserAPI.js';
+// import headerParser from './routes/headerParser.js';
 import shorterner from './routes/urlShorterner.js';
 import exercise from './routes/exerciseTracker.js';
 // import fileMetadata from './routes/fileMetadata.js';
@@ -29,7 +30,8 @@ app.get('/', (req, res) => {
  *  Routes
 **/
 app.use('/timestamp', timestamp);
-app.use('/header-parser', headerParser);
+app.use('/header-parser', headerParserV2);
+// app.use('/header-parser', headerParser);
 app.use('/url-shortener', shorterner);
 app.use('/exercise-tracker', exercise);
 app.use('/file-metadata', fileMetadataV2);
