@@ -22,4 +22,4 @@ fileMetadata.post('/api/fileanalyse', checkUpload, (req, res) => {
     });
 });
 
-export default fileMetadata;
+// export default fileMetadata;

@@ -16,4 +16,4 @@ headerParser.get('/api/whoami', (req, res) => {
     });
 });
 
-export default headerParser;
+// export default headerParser;
