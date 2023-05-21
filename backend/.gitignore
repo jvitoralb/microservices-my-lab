@@ -2,6 +2,8 @@
 /uploads/
 /routes/
 /controllers/
-/middleware/
+/middleware/exercise.js
+/middleware/fileMetadata.js
+/middleware/shortener.js
 /utils/
 .env
